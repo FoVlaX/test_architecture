@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="large_image_size">1200px</dimen>
+    <dimen name="medium_image_size">500px</dimen>
+    <dimen name="small_image_size">300px</dimen>
+    <dimen name="portrait_column_count">2px</dimen>
+    <dimen name="landscape_column_count">4px</dimen>
+    <dimen name="item_margin">25px</dimen>
+</resources>
