@@ -20,7 +20,7 @@ public class Work implements Serializable {
 
     @NonNull
     @PrimaryKey
-    private String work_id;
+    private Integer work_id;
     private String user_id;
     private String uri_owner;
     private Integer media_id;
@@ -63,11 +63,11 @@ public class Work implements Serializable {
         return this.isAnimated;
     }
 
-    public String getWork_id() {
+    public Integer getWork_id() {
         return work_id;
     }
 
-    public void setWork_id(String work_id) {
+    public void setWork_id(Integer work_id) {
         this.work_id = work_id;
     }
 

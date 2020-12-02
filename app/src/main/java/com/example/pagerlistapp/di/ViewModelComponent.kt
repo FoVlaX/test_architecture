@@ -1,10 +1,10 @@
 package com.example.pagerlistapp.di
 
 import android.os.Bundle
-import androidx.fragment.app.FragmentActivity
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.pagerlistapp.MainActivity
-import com.example.pagerlistapp.fragments.MainFragment
+import com.example.pagerlistapp.fragments.ItemFragment
+import com.example.pagerlistapp.fragments.PosFragment
 import dagger.BindsInstance
 import dagger.Subcomponent
 
@@ -20,5 +20,6 @@ interface ViewModelComponent {
     }
 
     fun inject(mainActivity: MainActivity)
-    fun inject(mainFragment: MainFragment)
+    fun inject(posFragment: PosFragment)
+    fun inject(itemFragment: ItemFragment)
 }

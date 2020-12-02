@@ -5,6 +5,14 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.pagerlistapp.fragments.MainFragment"
-        android:label="MainFragment" />
+        android:name="com.example.pagerlistapp.fragments.PosFragment"
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_itemFragment"
+            app:destination="@id/itemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemFragment"
+        android:name="com.example.pagerlistapp.fragments.ItemFragment"
+        android:label="ItemFragment" />
 </navigation>

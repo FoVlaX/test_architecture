@@ -8,5 +8,4 @@ import javax.inject.Singleton
 interface ApplicationComponent {
     fun repositoryComponent(): RepositoryComponent.Factory
     fun viewModelComponent(): ViewModelComponent.Builder
-    fun dataSourceComponent(): DataSourceComponent.Builder
 }

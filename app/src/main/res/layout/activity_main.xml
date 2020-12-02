@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/main">
 
     <fragment
         android:id="@+id/nav_host_fragment"
@@ -13,5 +14,19 @@
         android:layout_height="match_parent"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/bottom_menu"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toBottomOf="@id/main"
+        android:fitsSystemWindows="true"
+        app:itemHorizontalTranslationEnabled="true"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/design_default_color_background"
+        app:itemBackground="@color/design_default_color_secondary_variant"
+        app:itemTextColor="@color/design_default_color_on_secondary"
+        app:menu="@menu/navigation_items"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

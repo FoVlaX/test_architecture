@@ -1,4 +1,4 @@
-package com.example.pagerlistapp.datasource
+package com.example.pagerlistapp.simpledatasourcegenerator.datasource
 
 import androidx.paging.PositionalDataSource
 import io.reactivex.rxjava3.core.Completable
@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 class PosDataSource<T>(
         //функция которая подтягивает данные, можно передать, например из репозитория
-    val loadDataPos: LoadDataPos<T>
+    val loadDataPos: LoadDataPos<T>?
 ) : PositionalDataSource<T>() {
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
@@ -18,7 +18,7 @@ class PosDataSource<T>(
         //все равно следует передать в callback.onResult
         Completable.fromRunnable {
             callback.onResult(
-                    loadDataPos(params.requestedStartPosition,params.requestedLoadSize)!!,
+                    loadDataPos?.invoke(params.requestedStartPosition,params.requestedLoadSize)?:ArrayList<T>(),
                 params.requestedStartPosition
             )
         }.subscribeOn(Schedulers.io())
@@ -37,7 +37,7 @@ class PosDataSource<T>(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
         Completable.fromRunnable {
             callback.onResult(
-                loadDataPos(params.startPosition,params.loadSize)!!
+                loadDataPos?.invoke(params.startPosition,params.loadSize)?:ArrayList<T>()
             )
         }.subscribeOn(Schedulers.io())
             .subscribeWith(object : DisposableCompletableObserver(){

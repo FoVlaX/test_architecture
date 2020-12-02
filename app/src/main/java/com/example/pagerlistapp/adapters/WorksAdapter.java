@@ -45,8 +45,8 @@ public class WorksAdapter extends PagedListAdapter<Work, RecyclerView.ViewHolder
             Work item = getItem(position);
             if (item !=null) {
                 ((WorkHolder) holder).name.setText(item.getName());
-               // String likes = String.valueOf(item.getCounters().getLikes());
-                //((WorkHolder) holder).count_likes.setText(likes);
+                String likes = String.valueOf(item.getWork_id());
+                ((WorkHolder) holder).count_likes.setText(likes);
                                // Media media = получаешь здесь этот объект что привязан к работе
                 // Int size = получаешь размер в ПИКСЕЛЯХ, в нашем случае вертикальный размер изображения
                 // String placeholder = здесь плейсхолдер, т.е. цвет из Media
@@ -101,7 +101,8 @@ public class WorksAdapter extends PagedListAdapter<Work, RecyclerView.ViewHolder
                 @Override
                 public boolean areContentsTheSame(Work oldWork,
                                                   Work newWork) {
-                    return oldWork.equals(newWork);
+                    return oldWork.getWork_id()
+                            .compareTo(newWork.getWork_id())==0;
                 }
             };
 

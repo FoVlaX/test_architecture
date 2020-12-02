@@ -18,7 +18,7 @@ import com.example.pagerlistapp.viewmodels.MainActivityViewModel
 import com.example.pagerlistapp.viewmodels.ViewModelsFactory
 import javax.inject.Inject
 
-class MainFragment : Fragment(){
+class PosFragment : Fragment(){
 
     lateinit var recyclerView: RecyclerView
     companion object {
@@ -66,7 +66,7 @@ class MainFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerView = view.findViewById(R.id.recycler_view)
         App.instance?.applicationComponent?.viewModelComponent()
-            ?.with(requireActivity())
+            ?.with(this)
             ?.with(savedInstanceState)
             ?.build()
             ?.inject(this)

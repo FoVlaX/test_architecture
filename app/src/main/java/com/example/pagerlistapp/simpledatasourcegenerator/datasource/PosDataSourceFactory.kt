@@ -1,4 +1,4 @@
-package com.example.pagerlistapp.datasource
+package com.example.pagerlistapp.simpledatasourcegenerator.datasource
 
 import androidx.paging.DataSource
 
