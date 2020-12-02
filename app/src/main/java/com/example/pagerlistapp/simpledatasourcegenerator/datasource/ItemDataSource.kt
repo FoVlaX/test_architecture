@@ -1,5 +1,6 @@
 package com.example.pagerlistapp.simpledatasourcegenerator.datasource
 
+import android.util.Log
 import androidx.paging.ItemKeyedDataSource
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver
@@ -25,11 +26,11 @@ class ItemDataSource<K,T> (
             }.subscribeOn(Schedulers.io())
                     .subscribeWith(object : DisposableCompletableObserver() {
                         override fun onComplete() {
-
+                            Log.d("SimpleDataSource","loadInitial in ItemKeyed DataSource: method in ${loadDataItemAfter?.javaClass?.name} run completed")
                         }
 
                         override fun onError(e: Throwable?) {
-
+                            Log.e("SimpleDataSource","Error in $this:  ${loadDataItemAfter?.javaClass?.name} run failed with exception $e")
                         }
 
                     })
@@ -47,11 +48,11 @@ class ItemDataSource<K,T> (
             }.subscribeOn(Schedulers.io())
                     .subscribeWith(object : DisposableCompletableObserver() {
                         override fun onComplete() {
-
+                            Log.d("SimpleDataSource","loadAfter in ItemKeyed DataSource: method in ${loadDataItemAfter?.javaClass?.name} run completed")
                         }
 
                         override fun onError(e: Throwable?) {
-
+                            Log.e("SimpleDataSource","Error in $this:  ${loadDataItemAfter?.javaClass?.name} run failed with exception $e")
                         }
 
                     })
@@ -68,11 +69,11 @@ class ItemDataSource<K,T> (
             }.subscribeOn(Schedulers.io())
                     .subscribeWith(object : DisposableCompletableObserver() {
                         override fun onComplete() {
-
+                            Log.d("SimpleDataSource","loadBefore in ItemKeyed DataSource: method in ${loadDataItemBefore?.javaClass?.name} run completed")
                         }
 
                         override fun onError(e: Throwable?) {
-
+                            Log.e("SimpleDataSource","Error in $this:  ${loadDataItemBefore?.javaClass?.name} run failed with exception $e")
                         }
 
                     })

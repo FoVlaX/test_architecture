@@ -1,5 +1,7 @@
 package com.example.pagerlistapp.simpledatasourcegenerator.datasource
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.paging.PositionalDataSource
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver
@@ -23,12 +25,13 @@ class PosDataSource<T>(
             )
         }.subscribeOn(Schedulers.io())
             .subscribeWith(object : DisposableCompletableObserver(){
-                override fun onComplete() {
 
+                override fun onComplete() {
+                    Log.d("SimpleDataSource","loadInitial in Position DataSource: method in ${loadDataPos?.javaClass?.name} run completed")
                 }
 
                 override fun onError(e: Throwable?) {
-
+                    Log.e("SimpleDataSource","Error in $this:  ${loadDataPos?.javaClass?.name} run failed with exception $e")
                 }
 
             })
@@ -42,11 +45,11 @@ class PosDataSource<T>(
         }.subscribeOn(Schedulers.io())
             .subscribeWith(object : DisposableCompletableObserver(){
                 override fun onComplete() {
-
+                    Log.d("SimpleDataSource","loadRange in Position DataSource: method in ${loadDataPos?.javaClass?.name} run completed")
                 }
 
                 override fun onError(e: Throwable?) {
-
+                    Log.e("SimpleDataSource","Error in $this:  ${loadDataPos?.javaClass?.name} run failed with exception $e")
                 }
 
             })

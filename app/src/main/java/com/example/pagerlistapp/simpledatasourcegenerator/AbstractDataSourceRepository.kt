@@ -12,6 +12,10 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.functions
 import kotlin.reflect.jvm.isAccessible
 
+
+//Здесь получилось реализовать с помощью Reflection Api
+//наверное это можно как то сделать и с генерацией кода, чтобы все было
+//эффективнее
 abstract class AbstractDataSourceRepository(
         private val clazz: KClass<*>
 ) {
