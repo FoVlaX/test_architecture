@@ -26,7 +26,7 @@ class ViewModelsFactory @Inject constructor
 
             }
         }
-        return result?:throw IllegalArgumentException("Model class $modelClass has no constructor with SavedStateHandle")
+        return result?:throw IllegalArgumentException("Model $modelClass has no constructor with SavedStateHandle")
     }
 
 }

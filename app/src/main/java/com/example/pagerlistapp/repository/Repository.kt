@@ -15,42 +15,11 @@ import javax.inject.Inject
 class Repository @Inject constructor(
     val database: AppDatabase,
     val api: ArtistApiService
-) {
+) : AbstractRepository(Repository::class) {
 
 
-    init{
-        //Задаем мапы для функций подгрузки данных для датасурсов, а также фабрик
-        //для производства этих дата сурсов
-        //которые реализованные в данном репозитории
-        //таким образом у нас может быть любое количество, функций которые грузят какие либо данные из сети
-        //и сохраняют их в бд например и для каждой из них будет сгенерен датасурс, а потом и LiveData<PagedList>
-        //которые мы берем во вью модел и уже сетаем вв нужный адаптер
-        val map: HashMap<String, Functions> = HashMap()
-        val factoryMap = HashMap<String, Class<out Any>>()
-
-        //Functions - функции которые могут быть использованы в дата сурсах
-        //задавать только одну в зависимости от типа дата сурса
-        map["works"] =  Functions(loadDataPos = { offset, count ->
-            getWorks(offset, count)
-        })
-        factoryMap["works"] = PosDataSourceFactory::class.java
-
-        App.instance?.applicationComponent
-            ?.dataSourceComponent()
-                //какие фабрики изспользуем
-            ?.withClass(factoryMap)
-                //какие функции используем для подкгрузки данных в датасоурсах
-            ?.with (map)
-            ?.build()
-            ?.inject(this)
-    }
-
-
-    //здесь получаем PagedList's для функций, которые мы определяли выше
-    //и дальше используем по назначению в ViewModel
-    @Inject
-    lateinit var worksData: HashMap<String, LiveData<out PagedList<out Any>>>
-
+    //функция для которой нужен дата сурс
+    @GenDataSource(sourceName = "works", type = GenDataSource.Type.Positional)
     private fun getWorks(offset: Int, count: Int) : List<Work?>?{
         refreshDao(offset,count)
         return loadWorksFromDao(offset, count)

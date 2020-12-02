@@ -2,6 +2,7 @@ package com.example.pagerlistapp.di
 
 import com.example.pagerlistapp.datasource.Functions
 import com.example.pagerlistapp.datasource.LoadDataPos
+import com.example.pagerlistapp.repository.AbstractRepository
 import com.example.pagerlistapp.repository.Repository
 import dagger.BindsInstance
 import dagger.Subcomponent
@@ -18,5 +19,5 @@ interface DataSourceComponent {
         fun build(): DataSourceComponent
     }
 
-    fun inject(repository: Repository)
+    fun inject(abstractRepository: AbstractRepository)
 }

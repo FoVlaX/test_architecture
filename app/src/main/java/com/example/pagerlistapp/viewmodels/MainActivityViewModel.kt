@@ -21,10 +21,7 @@ class MainActivityViewModel(val state: SavedStateHandle) : ViewModel() {
             ?.repositoryComponent()
             ?.create()
             ?.inject(this)
-        worksData = repository.worksData["works"] as LiveData<PagedList<Work>>
+        worksData = repository.livePagedLists["works"] as LiveData<PagedList<Work>>
     }
-
-
-
 
 }

@@ -18,12 +18,11 @@ class DataSourceModule {
     @Provides
     fun getLiveData(loadDataPos: HashMap<String, Functions>,
                     dataSourceFactoryClass: HashMap<String,Class<out Any>>
-    ):
-            HashMap<String, LiveData<out PagedList<out Any>>> {
+    ): HashMap<String, LiveData<out PagedList<out Any>>> {
 
         val hashMap = HashMap<String, LiveData<out PagedList<out Any>>>()
 
-        for( entry in loadDataPos) {
+        for(entry in loadDataPos) {
 
             var sourceFactory: DataSource.Factory<out Any, out Any>? = null
 
@@ -51,7 +50,6 @@ class DataSourceModule {
                 throw IllegalArgumentException("Load Data function not found"), pagedListConfig)
                         .build()
             }
-
 
         return hashMap
     }
