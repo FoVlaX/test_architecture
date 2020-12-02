@@ -7,9 +7,9 @@ import io.reactivex.rxjava3.observers.DisposableCompletableObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class ItemDataSource<K,T> (
-        val loadDataItemAfter: LoadDataItem<K,T>?,
-        val loadDataItemBefore: LoadDataItem<K,T>?,
-        val getKeyFunction: GetKeyFunction<K,T>?
+        private val loadDataItemAfter: LoadDataItem<K,T>?,
+        private val loadDataItemBefore: LoadDataItem<K,T>?,
+        private val getKeyFunction: GetKeyFunction<K,T>?
         ): ItemKeyedDataSource<K,T>() {
 
     override fun getKey(item: T): K {
