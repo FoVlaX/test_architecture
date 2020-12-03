@@ -8,6 +8,7 @@ import com.example.pagerlistapp.models.Work
 import com.example.pagerlistapp.simpledatasourcegenerator.AbstractDataSourceRepository
 import com.example.pagerlistapp.simpledatasourcegenerator.annotations.GenDataSource
 import com.example.pagerlistapp.simpledatasourcegenerator.annotations.KeyItem
+import com.example.pagerlistapp.simpledatasourcegenerator.annotations.PageConfig
 import javax.inject.Inject
 
 
@@ -20,6 +21,7 @@ class Repository @Inject constructor(
     //функция для которой нужен позиционный дата сурс
     //              offset, count
     // должная быть (Int, Int): List<*>
+    @PageConfig(initialLoadSizeHint = 10, pageSize = 20, enablePlaceholders = false)
     @GenDataSource(sourceName = "works", type = GenDataSource.Type.Positional)
     private fun getWorks(offset: Int, count: Int) : List<Work?>?{
         refreshDao(offset,count)
@@ -28,6 +30,9 @@ class Repository @Inject constructor(
     //функция для которой нужен ItemKeyed дата сурс
     //              afterKey, count
     // должная быть (*, Int): List<*>
+    @PageConfig(initialLoadSizeHint = 2
+    ,pageSize = 4
+    ,enablePlaceholders = false)
     @GenDataSource(sourceName = "events", type = GenDataSource.Type.ItemKeyedAfter)
     private fun getNews(beforeId: Int, count: Int) : List<Event?>?{
         refreshNews(beforeId,count);

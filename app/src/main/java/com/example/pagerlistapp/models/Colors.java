@@ -9,16 +9,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Colors implements Serializable {
+
+
     public String getMiddle() {
         return middle;
     }
-
-
     public List<String> getPallete() {
         return pallete;
     }

@@ -8,7 +8,9 @@ import com.example.pagerlistapp.simpledatasourcegenerator.datasource.ItemDataSou
 import com.example.pagerlistapp.simpledatasourcegenerator.datasource.PosDataSourceFactory
 import com.example.pagerlistapp.simpledatasourcegenerator.annotations.GenDataSource
 import com.example.pagerlistapp.simpledatasourcegenerator.annotations.KeyItem
+import com.example.pagerlistapp.simpledatasourcegenerator.annotations.PageConfig
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 import kotlin.reflect.full.functions
 import kotlin.reflect.jvm.isAccessible
 
@@ -40,6 +42,8 @@ abstract class AbstractDataSourceRepository(
         //для вангога акутально так как там почему то ключ, который надо передать
         //в запросе, приходит в массиве в поле ids)
         val keyFunMap: HashMap<String, GetKeyFunction<*,*>> = HashMap()
+        val configMap: HashMap<KFunction<*>,PageConfig> = HashMap()
+        val configNameMap: HashMap<String, PageConfig> = HashMap()
 
         for(method in clazz.functions) {
             for (annotation in method.annotations) {
@@ -49,12 +53,19 @@ abstract class AbstractDataSourceRepository(
                         method.call(this,it)
                     }
                 }
+                if (annotation is PageConfig){
+                    configMap[method] = annotation
+                }
             }
         }
 
         for(method in clazz.functions) {
             for (annotation in method.annotations) {
                 if (annotation is GenDataSource) {
+
+                    if (configMap.containsKey(method)){
+                        configNameMap[annotation.sourceName] = configMap[method] as PageConfig
+                    }
 
                     if (annotation.type == GenDataSource.Type.Positional) {
                         method.isAccessible = true
@@ -101,7 +112,7 @@ abstract class AbstractDataSourceRepository(
                 }
             }
         }
-        livePagedLists = SimpleDataSourceGenerator().getLiveDataMapped(functionsMap,factoriesMap)
+        livePagedLists = SimpleDataSourceGenerator().getLiveDataMapped(functionsMap,factoriesMap, configNameMap)
     }
 
 }

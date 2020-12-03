@@ -21,7 +21,8 @@ class PosDataSource<T>(
         Completable.fromRunnable {
             callback.onResult(
                     loadDataPos?.invoke(params.requestedStartPosition,params.requestedLoadSize)?:ArrayList<T>(),
-                params.requestedStartPosition
+                params.requestedStartPosition,
+                    params.requestedLoadSize
             )
         }.subscribeOn(Schedulers.io())
             .subscribeWith(object : DisposableCompletableObserver(){
@@ -40,7 +41,7 @@ class PosDataSource<T>(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
         Completable.fromRunnable {
             callback.onResult(
-                loadDataPos?.invoke(params.startPosition,params.loadSize)?:ArrayList<T>()
+                loadDataPos?.invoke(params.startPosition,params.loadSize,)?:ArrayList<T>()
             )
         }.subscribeOn(Schedulers.io())
             .subscribeWith(object : DisposableCompletableObserver(){

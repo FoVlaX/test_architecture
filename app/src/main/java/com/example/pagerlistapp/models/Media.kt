@@ -6,21 +6,22 @@ import androidx.room.Ignore
 import java.io.Serializable
 
 
+
 data class Media(
     @ColumnInfo(name ="media_id_m")
-        var media_id: Int?,
-    var type: String?,
+    var media_id: Int? = null,
+    var type: String? = null,
     @ColumnInfo(name ="user_id_m")
-        var user_id: String?,
-    var caption: String?,
+    var user_id: String? = null,
+    var caption: String? = null,
     @Embedded
-        var data: Data?,
-    var create_date: String?,
-    var use_type: String?,
+    var data: Data? = null,
+    var create_date: String? = null,
+    var use_type: String? = null,
     @ColumnInfo(name ="uri_m")
-        var uri: String?,
-    var base_url: String?,
-    var _extended: String?
+    var uri: String? = null,
+    var base_url: String? = null,
+    var _extended: String? = null
 ) : Serializable {
     companion object {
         @Ignore
@@ -43,28 +44,17 @@ data class Media(
         return sizes.size - 1
     }
 
-    data class Data(
-        var version: String?,
-        var version_big: String?,
-        var version_orig: String?,
-        @Ignore
-            var sizes: Size?,
-        var x: String?,
-        var y: String?,
-        var ratio: String?,
-        var ext: String?,
-        @Ignore
-            var is_animated: String?
-    )
-
     data class Size(
-            val orig: SizeOrig?
+            @Embedded
+            var orig: SizeOrig? = null
     )
 
     data class SizeOrig(
-            val x: String?,
-            val y: String?,
-            val hash_file_name: String?
+            @ColumnInfo(name = "size_orig_x")
+            var x: String? = null,
+            @ColumnInfo(name = "size_orig_y")
+            var y: String? = null,
+            var hash_file_name: String? = null
     )
 
     enum class MediaRatio {

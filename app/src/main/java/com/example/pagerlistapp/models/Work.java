@@ -49,7 +49,7 @@ public class Work implements Serializable {
     private List<Integer> style_ids;
     @Ignore
     private List<Integer> genre_ids;
-    @Ignore
+    @Embedded
     private Counters counters;
     private Integer collection_id;
     @Ignore
@@ -390,7 +390,7 @@ public class Work implements Serializable {
     private Infos infos;
     @Ignore
     private Flags flags;
-    @Ignore
+    @Embedded
     private Colors colors;
     @Ignore
     private List <Integer> material_ids;
@@ -401,7 +401,7 @@ public class Work implements Serializable {
     @Ignore
     private Status status;
     private String description_html;
-    @Ignore
+    @Embedded
     private Media media;
     @Ignore
     private List<Technique> techniques;
