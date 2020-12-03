@@ -28,4 +28,12 @@ class MainActivityViewModel(val state: SavedStateHandle) : ViewModel() {
         eventsData = repository.livePagedLists["events"] as LiveData<PagedList<Event>>
     }
 
+    fun refreshWorks(){
+        worksData.value?.dataSource?.invalidate()
+    }
+
+    fun refreshEvents(){
+        eventsData.value?.dataSource?.invalidate()
+    }
+
 }

@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.pagerlistapp.R
 import com.example.pagerlistapp.adapters.EventAdapter
 import com.example.pagerlistapp.adapters.LoadAdapter
@@ -24,7 +24,7 @@ class ItemFragment : Fragment(){
 
     lateinit var recyclerView: RecyclerView
     companion object {
-        val COLUMN_COUNT = 2
+        val COLUMN_COUNT = 1
     }
 
     @Inject
@@ -35,8 +35,9 @@ class ItemFragment : Fragment(){
     }
 
     private val eventAdapter: EventAdapter = EventAdapter()
-    private val loadAdpater = LoadAdapter()
+    private val loadAdapter = LoadAdapter()
 
+    private lateinit var refreshSwipeLayout: SwipeRefreshLayout
     /**
      * Создаем новую конфигурацию для @ConcatAdapter и задаем параметру isolateViewTypes значение false,
      * для того чтобы getItemViewType(global_position) возвращала значение функции адаптера getItemViewType
@@ -55,7 +56,7 @@ class ItemFragment : Fragment(){
      * зависеть от адаптера к которому отнситься элемент на запрашиваемой глобальной позиции,
      * В каждом адаптере перегружена функция getItemViewType(position) которая и вернет нужный тип элемента
      */
-    val concatAdapter = ConcatAdapter(config, eventAdapter, loadAdpater)
+    val concatAdapter = ConcatAdapter(config, eventAdapter, loadAdapter)
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -75,6 +76,7 @@ class ItemFragment : Fragment(){
 
         recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.setHasFixedSize(true)
+        refreshSwipeLayout = view.findViewById(R.id.swipe_refresh)
         val gridLayoutManager = GridLayoutManager(view.context, COLUMN_COUNT)
 
         /**
@@ -100,8 +102,13 @@ class ItemFragment : Fragment(){
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = concatAdapter
 
-        viewModel.eventsData.observe(requireActivity()) {
-            works -> eventAdapter.submitList(works)
+        viewModel.eventsData.observe(requireActivity()) { events ->
+            eventAdapter.submitList(events)
+            refreshSwipeLayout.isRefreshing = false
+        }
+
+        refreshSwipeLayout.setOnRefreshListener {
+            viewModel.refreshEvents()
         }
 
     }

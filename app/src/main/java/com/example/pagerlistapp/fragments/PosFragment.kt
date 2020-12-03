@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.pagerlistapp.R
 import com.example.pagerlistapp.adapters.LoadAdapter
 import com.example.pagerlistapp.adapters.WorksAdapter
@@ -32,8 +33,9 @@ class PosFragment : Fragment(){
         viewModelsFactory
     }
 
+    private lateinit var refreshSwipeLayout: SwipeRefreshLayout
     private val worksAdapter: WorksAdapter = WorksAdapter()
-    private val loadAdpater = LoadAdapter()
+    private val loadAdapter = LoadAdapter()
 
     /**
      * Создаем новую конфигурацию для @ConcatAdapter и задаем параметру isolateViewTypes значение false,
@@ -53,7 +55,7 @@ class PosFragment : Fragment(){
      * зависеть от адаптера к которому отнситься элемент на запрашиваемой глобальной позиции,
      * В каждом адаптере перегружена функция getItemViewType(position) которая и вернет нужный тип элемента
      */
-    val concatAdapter = ConcatAdapter(config, worksAdapter, loadAdpater)
+    val concatAdapter = ConcatAdapter(config, worksAdapter, loadAdapter)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,6 +74,7 @@ class PosFragment : Fragment(){
             ?.inject(this)
 
         recyclerView = view.findViewById(R.id.recycler_view)
+        refreshSwipeLayout = view.findViewById(R.id.swipe_refresh)
         recyclerView.setHasFixedSize(true)
         val gridLayoutManager = GridLayoutManager(view.context, COLUMN_COUNT)
 
@@ -98,8 +101,13 @@ class PosFragment : Fragment(){
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = concatAdapter
 
-        viewModel.worksData.observe(requireActivity()) {
-                works -> worksAdapter.submitList(works)
+        viewModel.worksData.observe(requireActivity()) { works ->
+            worksAdapter.submitList(works)
+            refreshSwipeLayout.isRefreshing = false
+        }
+
+        refreshSwipeLayout.setOnRefreshListener {
+            viewModel.refreshWorks()
         }
 
     }
