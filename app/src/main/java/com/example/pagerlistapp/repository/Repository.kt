@@ -15,11 +15,15 @@ class Repository @Inject constructor(
     val api: ArtistApiService
 ) : AbstractDataSourceRepository(Repository::class) {
 
+    companion object{
+        const val WORKS = "works"
+        const val EVENTS = "events"
+    }
     //функция для которой нужен позиционный дата сурс
     //              offset, count
     // должная быть (Int, Int): List<*>
     @PageConfig(initialLoadSizeHint = 15, pageSize = 5, enablePlaceholders = false)
-    @GenDataSource(sourceName = "works", type = GenDataSource.Type.Positional)
+    @GenDataSource(sourceName = WORKS, type = GenDataSource.Type.Positional)
     private fun getWorks(offset: Int, count: Int) : List<Work?>?{
         refreshDao(offset,count)
         return database.workDao()?.getWorks(offset,count)
@@ -30,7 +34,7 @@ class Repository @Inject constructor(
     @PageConfig(initialLoadSizeHint = 2
     ,pageSize = 4
     ,enablePlaceholders = false)
-    @GenDataSource(sourceName = "events", type = GenDataSource.Type.ItemKeyedAfter)
+    @GenDataSource(sourceName = EVENTS, type = GenDataSource.Type.ItemKeyedAfter)
     private fun getNews(beforeId: Int, count: Int) : List<Event?>?{
         refreshNews(beforeId,count);
         return database.eventDao()?.getEvents(beforeId,count)

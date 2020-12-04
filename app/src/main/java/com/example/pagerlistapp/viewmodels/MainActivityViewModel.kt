@@ -25,8 +25,8 @@ class MainActivityViewModel(val state: SavedStateHandle) : ViewModel() {
             ?.repositoryComponent()
             ?.create()
             ?.inject(this)
-        worksData = repository.getNewLivePagedList("works",100 )
-        eventsData = repository.getNewLivePagedList("events", 0)
+        worksData = repository.getNewLivePagedList(Repository.WORKS,100 )
+        eventsData = repository.getNewLivePagedList(Repository.EVENTS, 0)
     }
 
     fun refreshWorks(){

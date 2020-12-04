@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">PagerListApp</string>
     <string name="database_name">TestDatabase</string>
+    <string name="works_source">works</string>
 </resources>

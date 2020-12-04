@@ -4,9 +4,7 @@ package com.example.pagerlistapp
 import android.icu.text.SimpleDateFormat
 import org.junit.Assert.*
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-
+import java.time.OffsetDateTime
 import java.util.*
 
 /**
@@ -18,7 +16,6 @@ import java.util.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        val result: Date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX").parse("2018-04-01T08:00:00.000+05:00")
-        println(result)
+        val dt: OffsetDateTime = OffsetDateTime.parse("2018-04-01T08:00:00.000+05:00")
     }
 }
