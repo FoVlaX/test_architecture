@@ -15,14 +15,15 @@ class PosDataSource<T>(
     val loadDataPos: LoadDataPos<T>?
 ) : PositionalDataSource<T>() {
 
+
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
         //Использовал Runnuble так как зачем личшний раз кидать данные между потоками если их
         //все равно следует передать в callback.onResult
+
         Completable.fromRunnable {
             callback.onResult(
                     loadDataPos?.invoke(params.requestedStartPosition,params.requestedLoadSize)?:ArrayList<T>(),
-                params.requestedStartPosition,
-                    params.requestedLoadSize
+                    params.requestedStartPosition
             )
         }.subscribeOn(Schedulers.io())
             .subscribeWith(object : DisposableCompletableObserver(){

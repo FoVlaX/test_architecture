@@ -18,15 +18,16 @@ class ViewModelsFactory @Inject constructor
         handle: SavedStateHandle
     ): T {
         var result: T? = null
+        var lastException: Exception? = null
         for (constructor in modelClass.constructors){
             try{
                 result = constructor.newInstance(handle) as T?
                 break
             }catch(ex: Exception){
-
+                lastException = ex
             }
         }
-        return result?:throw IllegalArgumentException("Model $modelClass has no constructor with SavedStateHandle")
+        return result?:throw IllegalArgumentException("Model $modelClass has no constructor with SavedStateHandle and ${lastException?.message?:""}")
     }
 
 }

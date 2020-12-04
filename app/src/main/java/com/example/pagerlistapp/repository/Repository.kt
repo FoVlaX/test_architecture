@@ -1,6 +1,5 @@
 package com.example.pagerlistapp.repository
 
-
 import com.example.pagerlistapp.ArtistApiService
 import com.example.pagerlistapp.dao.AppDatabase
 import com.example.pagerlistapp.models.Event
@@ -11,8 +10,6 @@ import com.example.pagerlistapp.simpledatasourcegenerator.annotations.KeyItem
 import com.example.pagerlistapp.simpledatasourcegenerator.annotations.PageConfig
 import javax.inject.Inject
 
-
-
 class Repository @Inject constructor(
     val database: AppDatabase,
     val api: ArtistApiService
@@ -21,7 +18,7 @@ class Repository @Inject constructor(
     //функция для которой нужен позиционный дата сурс
     //              offset, count
     // должная быть (Int, Int): List<*>
-    @PageConfig(initialLoadSizeHint = 10, pageSize = 20, enablePlaceholders = false)
+    @PageConfig(initialLoadSizeHint = 15, pageSize = 5, enablePlaceholders = false)
     @GenDataSource(sourceName = "works", type = GenDataSource.Type.Positional)
     private fun getWorks(offset: Int, count: Int) : List<Work?>?{
         refreshDao(offset,count)
@@ -38,12 +35,11 @@ class Repository @Inject constructor(
         refreshNews(beforeId,count);
         return database.eventDao()?.getEvents(beforeId,count)
     }
-
     // Если в запросе надо передавать более этих двух необходимых параметров
     // например какие либо фильтры
     // можно сделать их в виде параметров и использовать в функциях загрузки из интернета
     // и передавать в запросе к дао
-    // т.е. например установили какие либо фильтры вызвали у PagedList invalidate и он запустить
+    // т.е. например установили какие либо фильтры вызвали у PagedList invalidate и он запустит
     // помеченную аннотацией функцию, которая уже сделает запрос с новыми доп параметрами
 
     //функция для получения ключей в ItemKeyedDataSource

@@ -22,28 +22,38 @@ abstract class AbstractDataSourceRepository(
         private val clazz: KClass<*>
 ) {
 
-    //здесь храним все полученные пэйджлисты в ливдате
-    val livePagedLists: HashMap<String, LiveData<out PagedList<out Any>>>
+    private val simpleDataSourceGenerator: SimpleDataSourceGenerator = SimpleDataSourceGenerator()
+
+    fun <K,T> getNewLivePagedList(sourceName: String, initialKey: K?) : LiveData<PagedList<T>>  {
+        return simpleDataSourceGenerator.getLiveDataMapped<K,T>(
+                functionsMap[sourceName],
+                configNameMap[sourceName],
+                initialKey) as LiveData<PagedList<T>>
+    }
+
+
+    //Задаем мапы для функций подгрузки данных для датасурсов, а также фабрик
+    //для производства этих дата сурсов
+    //которые реализованные в данном репозитории
+    //таким образом у нас может быть любое количество, функций которые грузят какие либо данные из сети
+    //и сохраняют их в бд например и для каждой из них будет сгенерен датасурс, а потом и LiveData<PagedList>
+    //которые мы берем во вью модел и уже сетаем вв нужный адаптер
+    private val functionsMap: HashMap<String, Functions> = HashMap()
+    private val factoriesMap = HashMap<String, Class<out Any>>()
+
+    //Functions - функции которые могут быть использованы в дата сурсах
+    //задавать только одну в зависимости от типа дата сурса
+
+    //Сюда запишем функции которые будут получать ключ из обЪекта
+    //для вангога акутально так как там почему то ключ, который надо передать
+    //в запросе, приходит в массиве в поле ids)
+    private val keyFunMap: HashMap<String, GetKeyFunction<*,*>> = HashMap()
+    private val configMap: HashMap<KFunction<*>,PageConfig> = HashMap()
+    private val configNameMap: HashMap<String, PageConfig> = HashMap()
+
 
     init{
-        //Задаем мапы для функций подгрузки данных для датасурсов, а также фабрик
-        //для производства этих дата сурсов
-        //которые реализованные в данном репозитории
-        //таким образом у нас может быть любое количество, функций которые грузят какие либо данные из сети
-        //и сохраняют их в бд например и для каждой из них будет сгенерен датасурс, а потом и LiveData<PagedList>
-        //которые мы берем во вью модел и уже сетаем вв нужный адаптер
-        val functionsMap: HashMap<String, Functions> = HashMap()
-        val factoriesMap = HashMap<String, Class<out Any>>()
 
-        //Functions - функции которые могут быть использованы в дата сурсах
-        //задавать только одну в зависимости от типа дата сурса
-
-        //Сюда запишем функции которые будут получать ключ из обЪекта
-        //для вангога акутально так как там почему то ключ, который надо передать
-        //в запросе, приходит в массиве в поле ids)
-        val keyFunMap: HashMap<String, GetKeyFunction<*,*>> = HashMap()
-        val configMap: HashMap<KFunction<*>,PageConfig> = HashMap()
-        val configNameMap: HashMap<String, PageConfig> = HashMap()
 
         for(method in clazz.functions) {
             for (annotation in method.annotations) {
@@ -61,6 +71,7 @@ abstract class AbstractDataSourceRepository(
 
         for(method in clazz.functions) {
             for (annotation in method.annotations) {
+
                 if (annotation is GenDataSource) {
 
                     if (configMap.containsKey(method)){
@@ -112,7 +123,6 @@ abstract class AbstractDataSourceRepository(
                 }
             }
         }
-        livePagedLists = SimpleDataSourceGenerator().getLiveDataMapped(functionsMap,factoriesMap, configNameMap)
     }
 
 }

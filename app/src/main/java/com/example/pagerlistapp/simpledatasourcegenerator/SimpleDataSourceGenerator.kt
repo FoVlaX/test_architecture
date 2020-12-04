@@ -5,44 +5,60 @@ import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.pagerlistapp.simpledatasourcegenerator.annotations.PageConfig
-import com.example.pagerlistapp.simpledatasourcegenerator.datasource.Functions
+import com.example.pagerlistapp.simpledatasourcegenerator.datasource.*
 
 class SimpleDataSourceGenerator {
-    fun getLiveDataMapped(loadDataPos: HashMap<String, Functions>,
-                    dataSourceFactoryClass: HashMap<String,Class<out Any>>,
-                          pageConfig: HashMap<String, PageConfig>
-    ): HashMap<String, LiveData<out PagedList<out Any>>> {
+    fun <K,T>getLiveDataMapped(functions:  Functions?,
+                          pageConfig:  PageConfig?,
+                          initialKey: K?
+    ):  LiveData<out PagedList<T>> {
 
-        val hashMap = HashMap<String, LiveData<out PagedList<out Any>>>()
 
-        for(entry in loadDataPos) {
 
-            var sourceFactory: DataSource.Factory<out Any, out Any>? = null
+
+
+            var sourceFactory: DataSource.Factory<K, T>? = null
 
             //Если имеем дело с позиционным дата сурсом
-            if (entry.value.loadDataPos!=null) {
-                sourceFactory = dataSourceFactoryClass[entry.key]!!.constructors[0].newInstance(entry.value.loadDataPos)
-                        as DataSource.Factory<out Any, out Any>?
+            if (functions?.loadDataPos!=null) {
+
+                sourceFactory = PosDataSourceFactory<K,T>(functions.loadDataPos as LoadDataPos<T>)
+                        as DataSource.Factory<K, T>?
             }
 
             //Если имеем дело с Item Data source
-            if (entry.value.loadDataItemBefore!=null || entry.value.loadDataItemAfter!=null ) {
-                sourceFactory = dataSourceFactoryClass[entry.key]!!
-                        .constructors[0]
-                        .newInstance(entry.value.loadDataItemAfter,
-                                entry.value.loadDataItemBefore,
-                                entry.value.getKeyFunction)
-                        as DataSource.Factory<out Any, out Any>
+            if (functions?.loadDataItemBefore!=null || functions?.loadDataItemAfter!=null ) {
+
+                var loadDataItemAfter: LoadDataItem<K,T>? = null
+                var loadDataItemBefore: LoadDataItem<K,T>? = null
+                var getKeyFunction: GetKeyFunction<K,T>? = null
+
+                if (functions?.loadDataItemAfter!=null){
+                    loadDataItemAfter = functions?.loadDataItemAfter as LoadDataItem<K, T>
+                }
+
+                if (functions?.loadDataItemBefore!=null){
+                    loadDataItemBefore = functions?.loadDataItemBefore as LoadDataItem<K, T>
+                }
+
+                if (functions?.getKeyFunction!=null){
+                    getKeyFunction = functions?.getKeyFunction as GetKeyFunction<K, T>
+                }
+
+                sourceFactory = ItemDataSourceFactory<K,T>(loadDataItemAfter,
+                                loadDataItemBefore ,
+                                getKeyFunction)
+                        as DataSource.Factory<K, T>
             }
 
 
-            val pagedListConfig: PagedList.Config = if (pageConfig.containsKey(entry.key)) {
+            val pagedListConfig: PagedList.Config = if (pageConfig!=null) {
                 PagedList.Config.Builder()
-                        .setEnablePlaceholders(pageConfig[entry.key]!!.enablePlaceholders)
-                        .setInitialLoadSizeHint(pageConfig[entry.key]!!.initialLoadSizeHint)
-                        .setPageSize(pageConfig[entry.key]!!.pageSize)
-                        .setMaxSize(pageConfig[entry.key]!!.maxSize)
-                        .setPrefetchDistance(pageConfig[entry.key]!!.prefetchDistance)
+                        .setEnablePlaceholders(pageConfig!!.enablePlaceholders)
+                        .setInitialLoadSizeHint(pageConfig!!.initialLoadSizeHint)
+                        .setPageSize(pageConfig!!.pageSize)
+                        .setMaxSize(pageConfig!!.maxSize)
+                        .setPrefetchDistance(pageConfig!!.prefetchDistance)
                         .build()
             }else{
                 PagedList.Config.Builder()
@@ -52,11 +68,10 @@ class SimpleDataSourceGenerator {
                         .build()
             }
 
-            hashMap[entry.key] = LivePagedListBuilder(sourceFactory?:
+            return LivePagedListBuilder<K,T>(sourceFactory?:
             throw IllegalArgumentException("Load Data function not found"), pagedListConfig)
+                    .setInitialLoadKey(initialKey)
                     .build()
-        }
 
-        return hashMap
     }
 }
