@@ -102,10 +102,10 @@ class ItemFragment : Fragment(){
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = concatAdapter
 
-        viewModel.eventsData.observe(requireActivity()) { events ->
+        /*viewModel.eventsData.observe(requireActivity()) { events ->
             eventAdapter.submitList(events)
             refreshSwipeLayout.isRefreshing = false
-        }
+        }*/
 
         refreshSwipeLayout.setOnRefreshListener {
             viewModel.refreshEvents()

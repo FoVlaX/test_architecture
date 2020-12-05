@@ -1,18 +1,8 @@
 package com.example.pagerlistapp.models;
 
 
-
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@NoArgsConstructor
-@Setter
-@Getter
-@AllArgsConstructor
 public class Artist implements Serializable {
     private float artist_id;
     private float user_id;

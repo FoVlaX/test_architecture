@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+
 
 
 android {
@@ -36,23 +36,27 @@ android {
         unitTests.returnDefaultValues = true
     }
 
+
 }
 
 
 dependencies {
-    def nav_version = "2.3.0"
+    def nav_version = "2.3.1"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0"
-    implementation 'androidx.core:core-ktx:1.3.1'
+
+    kapt project(":aprocessor")
+    implementation project(':app:datasourcelibrary')
+    implementation project(':datasourcegenerator')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
     implementation "androidx.appcompat:appcompat:1.2.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.0.1"
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha04'
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha06'
     implementation 'com.google.android.material:material:1.2.1'
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
-    implementation 'org.projectlombok:lombok:1.18.12'
     implementation "io.reactivex.rxjava3:rxjava:3.0.6"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
@@ -81,7 +85,7 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.29.1'
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.7.0'
     implementation 'com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0'
@@ -99,12 +103,10 @@ dependencies {
 
     // optional - RxJava support
     implementation "androidx.paging:paging-rxjava2-ktx:$paging_version" // For Kotlin use paging-rxjava2-ktx
-
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.20"
 
-    testCompile 'junit:junit:4.12'
-    testCompile "org.robolectric:robolectric:3.4.2"
 }

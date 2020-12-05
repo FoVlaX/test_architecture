@@ -2,15 +2,7 @@ package com.example.pagerlistapp.models;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Style implements Serializable {
     private float style_id;
     private float parent_id;

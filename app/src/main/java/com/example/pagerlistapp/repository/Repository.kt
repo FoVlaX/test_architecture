@@ -1,19 +1,23 @@
 package com.example.pagerlistapp.repository
 
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
+import com.example.annotations.simpledatasourcegenerator.GenDataSource
+import com.example.annotations.simpledatasourcegenerator.PageConfig
+import com.example.annotations.simpledatasourcegenerator.WithDataSource
 import com.example.pagerlistapp.ArtistApiService
 import com.example.pagerlistapp.dao.AppDatabase
 import com.example.pagerlistapp.models.Event
 import com.example.pagerlistapp.models.Work
-import com.example.pagerlistapp.simpledatasourcegenerator.AbstractDataSourceRepository
-import com.example.pagerlistapp.simpledatasourcegenerator.annotations.GenDataSource
-import com.example.pagerlistapp.simpledatasourcegenerator.annotations.KeyItem
-import com.example.pagerlistapp.simpledatasourcegenerator.annotations.PageConfig
+import com.fovlax.datasourcelibrary.SimpleDataSourceGenerator
+import com.fovlax.datasourcelibrary.datasource.Functions
 import javax.inject.Inject
 
+@WithDataSource
 class Repository @Inject constructor(
     val database: AppDatabase,
     val api: ArtistApiService
-) : AbstractDataSourceRepository(Repository::class) {
+) {
 
     companion object{
         const val WORKS = "works"
@@ -22,9 +26,9 @@ class Repository @Inject constructor(
     //функция для которой нужен позиционный дата сурс
     //              offset, count
     // должная быть (Int, Int): List<*>
-    @PageConfig(initialLoadSizeHint = 15, pageSize = 5, enablePlaceholders = false)
-    @GenDataSource(sourceName = WORKS, type = GenDataSource.Type.Positional)
-    private fun getWorks(offset: Int, count: Int) : List<Work?>?{
+    @PageConfig(initialLoadSizeHint = 4, pageSize = 2, enablePlaceholders = false)
+    @GenDataSource(sourceName = WORKS, type = com.example.annotations.simpledatasourcegenerator.GenDataSource.Type.Positional)
+    fun getWorks(offset: Int, count: Int) : List<Work?>?{
         refreshDao(offset,count)
         return database.workDao()?.getWorks(offset,count)
     }
@@ -34,20 +38,24 @@ class Repository @Inject constructor(
     @PageConfig(initialLoadSizeHint = 2
     ,pageSize = 4
     ,enablePlaceholders = false)
-    @GenDataSource(sourceName = EVENTS, type = GenDataSource.Type.ItemKeyedAfter)
-    private fun getNews(beforeId: Int, count: Int) : List<Event?>?{
+    @GenDataSource(sourceName = EVENTS, type = com.example.annotations.simpledatasourcegenerator.GenDataSource.Type.ItemKeyedAfter)
+    fun getNews(beforeId: Int, count: Int) : List<Event?>?{
         refreshNews(beforeId,count);
         return database.eventDao()?.getEvents(beforeId,count)
     }
-    // Если в запросе надо передавать более этих двух необходимых параметров
-    // например какие либо фильтры
-    // можно сделать их в виде параметров и использовать в функциях загрузки из интернета
-    // и передавать в запросе к дао
-    // т.е. например установили какие либо фильтры вызвали у PagedList invalidate и он запустит
-    // помеченную аннотацией функцию, которая уже сделает запрос с новыми доп параметрами
+
+    fun getLiveData(): LiveData<out PagedList<Work>> {
+        return SimpleDataSourceGenerator().getLiveDataMapped<Int,Work>(
+            Functions(
+                loadDataPos = { offset, count ->
+                    getWorks(offset,count)
+                }
+            ),null,8
+        )
+    }
 
     //функция для получения ключей в ItemKeyedDataSource
-    @KeyItem(name = "events")
+    @com.example.annotations.simpledatasourcegenerator.KeyItem(name = "events")
     private fun getKeyForEvent(event: Event?): Int{
         return event?.ids?.get(0)?:0
     }

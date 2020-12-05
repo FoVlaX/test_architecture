@@ -2,15 +2,8 @@ package com.example.pagerlistapp.models;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Set  implements Serializable {
     private float set_id;
     private float user_id;

@@ -3,15 +3,8 @@ package com.example.pagerlistapp.models;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class Technique implements Serializable {
     private String technique_id;
     private String media_id;
