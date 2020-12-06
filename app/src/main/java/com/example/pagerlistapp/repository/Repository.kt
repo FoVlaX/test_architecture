@@ -45,8 +45,9 @@ class Repository @Inject constructor(
         return database.eventDao()?.getEvents(beforeId,count)
     }
 
+
     //функция для получения ключей в ItemKeyedDataSource
-    @KeyItem(name = "events")
+    @KeyItem(name = EVENTS)
     fun getKeyForEvent(event: Event?): Int{
         return event?.ids?.get(0)?:0
     }

@@ -17,11 +17,11 @@ class ItemDataSource<K,T> (
     }
 
     override fun loadInitial(params: LoadInitialParams<K>, callback: LoadInitialCallback<T>) {
-        if (loadDataItemAfter!=null) {
+        if (loadDataItemAfter!=null || loadDataItemBefore!=null) {
             Completable.fromRunnable {
                 callback.onResult(
                         loadDataItemAfter?.invoke(getKeyFunction?.invoke(null)!!, params.requestedLoadSize)
-                                ?: ArrayList<T>()
+                                ?:(loadDataItemBefore?.invoke(getKeyFunction?.invoke(null)!!, params.requestedLoadSize)!!)
                 )
             }.subscribeOn(Schedulers.io())
                     .subscribeWith(object : DisposableCompletableObserver() {

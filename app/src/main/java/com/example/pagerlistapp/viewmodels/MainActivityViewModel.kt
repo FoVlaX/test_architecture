@@ -34,7 +34,6 @@ class MainActivityViewModel(val state: SavedStateHandle) : ViewModel() {
 
     fun refreshEvents(){
         eventsData.value?.dataSource?.invalidate()
-        eventsData.value;
     }
 
 }
