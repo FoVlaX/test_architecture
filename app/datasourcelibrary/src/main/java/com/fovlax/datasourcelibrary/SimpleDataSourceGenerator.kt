@@ -10,7 +10,7 @@ import com.fovlax.datasourcelibrary.datasource.*
 
 class SimpleDataSourceGenerator {
     fun <K, T> getLiveDataMapped(
-        functions: Functions?,
+        functions: Functions<K,T>?,
         pageConfig: PagedList.Config?,
         initialKey: K?
     ): LiveData<PagedList<T>> {

@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.example.pagerlistapp.application.App
+import com.example.pagerlistapp.models.Event
 import com.example.pagerlistapp.models.Work
 import com.example.pagerlistapp.repository.Repository
 import com.example.pagerlistapp.repository.Repository_Impl
@@ -16,15 +17,15 @@ class MainActivityViewModel(val state: SavedStateHandle) : ViewModel() {
     lateinit var repository: Repository
 
    val worksData: LiveData<PagedList<Work>>
-    //val eventsData: LiveData<PagedList<Event>>
+    val eventsData: LiveData<PagedList<Event>>
 
     init{
         App.instance?.applicationComponent
             ?.repositoryComponent()
             ?.create()
             ?.inject(this)
-        worksData = Repository_Impl(repository).getWorksLivePagedList(0)
-        //eventsData = repository.getNewLivePagedList(Repository.EVENTS, 0)
+        worksData = Repository_Impl(repository).worksLivePagedList(0)
+        eventsData = Repository_Impl(repository).eventsLivePagedList( 0)
     }
 
     fun refreshWorks(){
@@ -32,8 +33,8 @@ class MainActivityViewModel(val state: SavedStateHandle) : ViewModel() {
     }
 
     fun refreshEvents(){
-        //eventsData.value?.dataSource?.invalidate()
-        //eventsData.value;
+        eventsData.value?.dataSource?.invalidate()
+        eventsData.value;
     }
 
 }

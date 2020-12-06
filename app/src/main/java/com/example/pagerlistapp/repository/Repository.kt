@@ -3,6 +3,7 @@ package com.example.pagerlistapp.repository
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.example.annotations.simpledatasourcegenerator.GenDataSource
+import com.example.annotations.simpledatasourcegenerator.KeyItem
 import com.example.annotations.simpledatasourcegenerator.PageConfig
 import com.example.annotations.simpledatasourcegenerator.WithDataSource
 import com.example.pagerlistapp.ArtistApiService
@@ -39,24 +40,14 @@ class Repository @Inject constructor(
     ,pageSize = 4
     ,enablePlaceholders = false)
     @GenDataSource(sourceName = EVENTS, type = com.example.annotations.simpledatasourcegenerator.GenDataSource.Type.ItemKeyedAfter)
-    fun getNews(beforeId: Int, count: Int) : List<Event?>?{
-        refreshNews(beforeId,count);
+    fun getNews(beforeId: Int?, count: Int) : List<Event?>?{
+        refreshNews(beforeId!!,count);
         return database.eventDao()?.getEvents(beforeId,count)
     }
 
-    fun getLiveData(): LiveData<out PagedList<Work>> {
-        return SimpleDataSourceGenerator().getLiveDataMapped<Int,Work>(
-            Functions(
-                loadDataPos = { offset, count ->
-                    getWorks(offset,count)
-                }
-            ),null,8
-        )
-    }
-
     //функция для получения ключей в ItemKeyedDataSource
-    @com.example.annotations.simpledatasourcegenerator.KeyItem(name = "events")
-    private fun getKeyForEvent(event: Event?): Int{
+    @KeyItem(name = "events")
+    fun getKeyForEvent(event: Event?): Int{
         return event?.ids?.get(0)?:0
     }
 

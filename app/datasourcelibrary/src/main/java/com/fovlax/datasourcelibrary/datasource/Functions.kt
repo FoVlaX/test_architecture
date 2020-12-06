@@ -15,9 +15,9 @@ typealias LoadDataItem<K,T> = (K, Int) -> List<T?>?
 
 
 //дата класс для функций
-data class Functions (
-    val loadDataPos: LoadDataPos<*>? = null,
-    var loadDataItemBefore: LoadDataItem<*, *>? = null,
-    var loadDataItemAfter: LoadDataItem<*, *>? = null,
-    val getKeyFunction: GetKeyFunction<*, *>? = null
+data class Functions<K,T> (
+    val loadDataPos: LoadDataPos<T>? = null,
+    var loadDataItemBefore: LoadDataItem<K, T>? = null,
+    var loadDataItemAfter: LoadDataItem<K, T>? = null,
+    val getKeyFunction: GetKeyFunction<K, T>? = null
 )

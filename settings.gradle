@@ -1,5 +1,5 @@
 include ':app:datasourcelibrary'
 include ':aprocessor'
-include ':datasourcegenerator'
+include ':annotations'
 include ':app'
 rootProject.name = "PagerListApp"
