@@ -11,19 +11,13 @@ import com.example.pagerlistapp.repository.Repository
 import com.example.pagerlistapp.repository.Repository_Impl
 import javax.inject.Inject
 
-class MainActivityViewModel(val state: SavedStateHandle) : ViewModel() {
+class MainActivityViewModel(val state: SavedStateHandle, var repository: Repository) : ViewModel() {
 
-    @Inject
-    lateinit var repository: Repository
 
    val worksData: LiveData<PagedList<Work>>
-    val eventsData: LiveData<PagedList<Event>>
+   val eventsData: LiveData<PagedList<Event>>
 
     init{
-        App.instance?.applicationComponent
-            ?.repositoryComponent()
-            ?.create()
-            ?.inject(this)
         worksData = Repository_Impl(repository).worksLivePagedList(0)
         eventsData = Repository_Impl(repository).eventsLivePagedList( 0)
     }

@@ -16,6 +16,9 @@ android {
         buildConfigField "String", "BASE_URL", '"https://api.arthive.com/v2.0/"'
         buildConfigField "Integer", "ARTIST_ID", '739'
     }
+
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -34,6 +37,7 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        compileSdkVersion 29
     }
 
 
@@ -104,9 +108,23 @@ dependencies {
     // optional - RxJava support
     implementation "androidx.paging:paging-rxjava2-ktx:$paging_version" // For Kotlin use paging-rxjava2-ktx
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.20"
+    testImplementation 'org.robolectric:robolectric:4.2.1'
+    testImplementation "io.mockk:mockk:1.10.3-jdk8"
+    testImplementation "com.google.truth:truth:1.1"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    // Core library
+    androidTestImplementation 'androidx.test:core:1.3.0'
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+    // Assertions
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.ext:truth:1.3.0'
 
 }

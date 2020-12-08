@@ -15,7 +15,7 @@ import com.fovlax.datasourcelibrary.datasource.Functions
 import javax.inject.Inject
 
 @WithDataSource
-class Repository @Inject constructor(
+open class Repository @Inject constructor(
     val database: AppDatabase,
     val api: ArtistApiService
 ) {
