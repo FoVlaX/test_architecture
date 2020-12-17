@@ -51,6 +51,7 @@ class MainViewModelTest {
 
     @Test
     fun `assert state viewModel`(){
+        Assert.assertTrue(viewModel.worksState.value is State.Waiting)
         waitPagedListInit()
         //loading... wait data
         Thread.sleep(2000)
@@ -59,9 +60,8 @@ class MainViewModelTest {
     }
 
     private fun waitPagedListInit(){
-
         val syncObject = Object()
-        viewModel.worksData.observeForever{
+        viewModel.worksData.observeForever {
             synchronized(syncObject) {
                 syncObject.notify()
             }
@@ -69,7 +69,6 @@ class MainViewModelTest {
         synchronized(syncObject) {
             syncObject.wait()
         }
-
     }
 
 }

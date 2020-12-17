@@ -12,9 +12,10 @@ import org.robolectric.annotation.RealObject
 @Implements(Repository::class)
 class RepositoryContext {
 
-    private val currentWorksState: MutableLiveData<State> = MutableLiveData(State.Loaded())
+    private val currentWorksState: MutableLiveData<State> = MutableLiveData(State.Waiting())
 
     fun getWorks(offset: Int, count: Int): List<Work?>?{
+        currentWorksState.postValue(State.Loaded())
         return List(count){
             val work = Work()
             work.work_id = it + offset
