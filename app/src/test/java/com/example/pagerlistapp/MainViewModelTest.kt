@@ -5,6 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.pagerlistapp.repository.Repository
+import com.example.pagerlistapp.repository.State
 import com.example.pagerlistapp.viewmodels.MainActivityViewModel
 import org.junit.Assert
 import org.junit.Rule
@@ -48,7 +49,14 @@ class MainViewModelTest {
         Assert.assertEquals(viewModel.worksData.value, repository.getWorks(0,16))
     }
 
-
+    @Test
+    fun `assert state viewModel`(){
+        waitPagedListInit()
+        //loading... wait data
+        Thread.sleep(2000)
+        //assert state
+        Assert.assertTrue(viewModel.worksState.value is State.Loaded)
+    }
 
     private fun waitPagedListInit(){
 
