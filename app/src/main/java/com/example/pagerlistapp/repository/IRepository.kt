@@ -16,7 +16,7 @@ interface IRepository {
         const val EVENTS = "events"
     }
 
-    @PageConfig(initialLoadSizeHint = 4,
+    @PageConfig(initialLoadSizeHint = 16,
             pageSize = 4,
             enablePlaceholders = false)
     @GenDataSource(sourceName = WORKS, type = Type.Positional)

@@ -12,8 +12,8 @@ class RepositoryContext {
     fun getWorks(offset: Int, count: Int): List<Work?>?{
         return List(count){
             val work = Work()
-            work.work_id = it
-            work.name = "test names $it"
+            work.work_id = it + offset
+            work.name = "test names ${it + offset}"
             work
         }
     }
