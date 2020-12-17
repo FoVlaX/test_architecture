@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
@@ -29,7 +30,7 @@ class PosFragment : Fragment(){
     @Inject
     lateinit var viewModelsFactory: ViewModelsFactory
 
-    private val viewModel: MainActivityViewModel by viewModels {
+    private val viewModel: MainActivityViewModel by activityViewModels {
         viewModelsFactory
     }
 
@@ -108,6 +109,10 @@ class PosFragment : Fragment(){
 
         refreshSwipeLayout.setOnRefreshListener {
             viewModel.refreshWorks()
+        }
+
+        viewModel.worksState.observe(viewLifecycleOwner){
+            activity?.title = it.description
         }
 
     }
