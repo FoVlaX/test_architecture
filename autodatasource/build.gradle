@@ -1,23 +1,21 @@
 plugins {
-    id 'java-library'
-    id 'kotlin'
+    id 'com.android.library'
+    id 'com.jfrog.bintray'
+    id 'maven-publish'
+    id 'kotlin-android'
 }
 
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven-publish'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
 ext {
     bintrayRepo = 'autodatasource'
-    bintrayName = 'annotations'
+    bintrayName = 'autodatasource'
 
     publishedGroupId = 'com.fovlaxcorp.autodatasource'
     libraryName = 'autodatasource'
-    artifact = 'annotations'
+    artifact = 'autodatasource'
 
     libraryDescription = 'autodatasource'
 
@@ -42,14 +40,48 @@ bintray {
     }
 }
 
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
 dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    //testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "io.reactivex.rxjava3:rxjava:3.0.6"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
-
-
     def paging_version = "2.1.2"
     def lifecycle_version = "2.2.0"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version" // For Kotlin use paging-runtime-ktx

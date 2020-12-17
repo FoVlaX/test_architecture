@@ -1,3 +1,4 @@
+include ':autodatasource'
 include ':app:datasourcelibrary'
 include ':aprocessor'
 include ':annotations'

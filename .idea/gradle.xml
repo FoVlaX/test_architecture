@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app/datasourcelibrary" />
             <option value="$PROJECT_DIR$/aprocessor" />
+            <option value="$PROJECT_DIR$/autodatasource" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

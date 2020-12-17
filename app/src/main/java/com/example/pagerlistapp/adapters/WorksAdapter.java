@@ -1,6 +1,8 @@
 package com.example.pagerlistapp.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.pagerlistapp.InfoActivity;
 import com.example.pagerlistapp.R;
 import com.example.pagerlistapp.models.Media;
 import com.example.pagerlistapp.models.Work;
@@ -31,9 +34,12 @@ public class WorksAdapter extends PagedListAdapter<Work, RecyclerView.ViewHolder
         super(DIFF_CALLBACK);
     }
 
+    private Context context;
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_work_item,parent,false);
         return new WorkHolder(view);
     }
@@ -50,6 +56,12 @@ public class WorksAdapter extends PagedListAdapter<Work, RecyclerView.ViewHolder
                                // Media media = получаешь здесь этот объект что привязан к работе
                 // Int size = получаешь размер в ПИКСЕЛЯХ, в нашем случае вертикальный размер изображения
                 // String placeholder = здесь плейсхолдер, т.е. цвет из Media
+
+                ((WorkHolder) holder).itemView.setOnClickListener((v)->{
+                    Intent intent = new Intent(context, InfoActivity.class);
+                    context.startActivity(intent);
+                });
+
                 try {
                     Media media = item.getMedia();
                     ViewUtilKt.showMedia(((WorkHolder) holder).image_view,

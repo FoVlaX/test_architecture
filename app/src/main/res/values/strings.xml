@@ -2,4 +2,6 @@
     <string name="app_name">PagerListApp</string>
     <string name="database_name">TestDatabase</string>
     <string name="works_source">works</string>
+    <string name="positional">POSITIONAL</string>
+    <string name="itemkeyed">ITEM KEYED</string>
 </resources>

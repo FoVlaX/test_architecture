@@ -2,6 +2,7 @@ package com.example.pagerlistapp.di
 
 import com.example.pagerlistapp.dao.AppDatabase
 import com.example.pagerlistapp.ArtistApiService
+import com.example.pagerlistapp.repository.IRepository
 import com.example.pagerlistapp.repository.Repository
 import dagger.Module
 import dagger.Provides
@@ -11,7 +12,7 @@ import javax.inject.Singleton
 class RepositoryModule {
     @Provides
     @Singleton
-    fun repository(database: AppDatabase, api: ArtistApiService) :Repository {
+    fun repository(database: AppDatabase, api: ArtistApiService) :IRepository {
         return Repository(database = database, api = api)
     }
 }

@@ -2,6 +2,7 @@ package com.example.pagerlistapp.models;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
@@ -37,7 +38,7 @@ public class Work implements Serializable {
     private String description;
     private String uri;
    // private List<Tag> tags;
-   @Ignore
+    @Ignore
     private List<Integer> alt_media_ids;
     @Ignore
     private List<Integer> style_ids;
@@ -414,6 +415,59 @@ public class Work implements Serializable {
 
     public void setAnimated(Boolean animated) {
         isAnimated = animated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Work)) return false;
+        Work work = (Work) o;
+        return getDate_upload() == work.getDate_upload() &&
+                getType_id() == work.getType_id() &&
+                getSx() == work.getSx() &&
+                getSy() == work.getSy() &&
+                getSz() == work.getSz() &&
+                getDescription_length() == work.getDescription_length() &&
+                getWork_id().equals(work.getWork_id()) &&
+                Objects.equals(getUser_id(), work.getUser_id()) &&
+                Objects.equals(getUri_owner(), work.getUri_owner()) &&
+                Objects.equals(getMedia_id(), work.getMedia_id()) &&
+                Objects.equals(getMasterwork(), work.getMasterwork()) &&
+                Objects.equals(getDt_finish(), work.getDt_finish()) &&
+                Objects.equals(getCoords(), work.getCoords()) &&
+                Objects.equals(getIs_adult(), work.getIs_adult()) &&
+                Objects.equals(getPrivacy(), work.getPrivacy()) &&
+                Objects.equals(getName(), work.getName()) &&
+                Objects.equals(getArtist_hidden_price(), work.getArtist_hidden_price()) &&
+                Objects.equals(getNames(), work.getNames()) &&
+                Objects.equals(getDescription(), work.getDescription()) &&
+                Objects.equals(getUri(), work.getUri()) &&
+                Objects.equals(getAlt_media_ids(), work.getAlt_media_ids()) &&
+                Objects.equals(getStyle_ids(), work.getStyle_ids()) &&
+                Objects.equals(getGenre_ids(), work.getGenre_ids()) &&
+                Objects.equals(getCounters(), work.getCounters()) &&
+                Objects.equals(getCollection_id(), work.getCollection_id()) &&
+                Objects.equals(getIsAnimated(), work.getIsAnimated()) &&
+                Objects.equals(getAset_ids(), work.getAset_ids()) &&
+                Objects.equals(getInfos(), work.getInfos()) &&
+                Objects.equals(getFlags(), work.getFlags()) &&
+                Objects.equals(getColors(), work.getColors()) &&
+                Objects.equals(getMaterial_ids(), work.getMaterial_ids()) &&
+                Objects.equals(getTechnique_ids(), work.getTechnique_ids()) &&
+                Objects.equals(getArtist_ids(), work.getArtist_ids()) &&
+                Objects.equals(getStatus(), work.getStatus()) &&
+                Objects.equals(getDescription_html(), work.getDescription_html()) &&
+                Objects.equals(getMedia(), work.getMedia()) &&
+                Objects.equals(getTechniques(), work.getTechniques()) &&
+                Objects.equals(getStyles(), work.getStyles()) &&
+                Objects.equals(getMaterials(), work.getMaterials()) &&
+                Objects.equals(getSets(), work.getSets()) &&
+                Objects.equals(getGenres(), work.getGenres());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getWork_id(), getUser_id(), getUri_owner(), getMedia_id(), getDate_upload(), getType_id(), getMasterwork(), getDt_finish(), getSx(), getSy(), getSz(), getCoords(), getIs_adult(), getPrivacy(), getName(), getArtist_hidden_price(), getDescription_length(), getNames(), getDescription(), getUri(), getAlt_media_ids(), getStyle_ids(), getGenre_ids(), getCounters(), getCollection_id(), getIsAnimated(), getAset_ids(), getInfos(), getFlags(), getColors(), getMaterial_ids(), getTechnique_ids(), getArtist_ids(), getStatus(), getDescription_html(), getMedia(), getTechniques(), getStyles(), getMaterials(), getSets(), getGenres());
     }
 }
 
