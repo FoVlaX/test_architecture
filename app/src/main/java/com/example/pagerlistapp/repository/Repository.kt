@@ -1,9 +1,12 @@
 package com.example.pagerlistapp.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.pagerlistapp.ArtistApiService
 import com.example.pagerlistapp.dao.AppDatabase
 import com.example.pagerlistapp.models.Event
 import com.example.pagerlistapp.models.Work
+import java.util.*
 import javax.inject.Inject
 
 
@@ -12,9 +15,18 @@ class Repository @Inject constructor(
     val api: ArtistApiService?
 ) : IRepository {
 
+
+    val currentWorksState: MutableLiveData<State> = MutableLiveData(State.Waiting())
+
     override fun getWorks(offset: Int, count: Int) : List<Work?>?{
+        currentWorksState.postValue(State.Loading(offset = offset, count = count))
         refreshDao(offset,count)
-        return database?.workDao()?.getWorks(offset,count)
+        val data =  database?.workDao()?.getWorks(offset,count)
+
+        if (data?.size != 0 && currentWorksState.value is State.NoConnection){
+            currentWorksState.postValue(State.LoadedLocal(Date()))
+        }
+        return data;
     }
 
 
@@ -31,10 +43,18 @@ class Repository @Inject constructor(
     private fun refreshDao(offset: Int, count: Int){
         api?.getWorks(offset = offset, count = count)
                 ?.subscribe({
-                    database?.workDao()?.insert(it?.data?.getArtWorks()!!)
+
+                    val works = it?.data?.getArtWorks()!!
+                    var pos = 0
+                    for (work in works){
+                        work.positionInDb = offset + pos
+                        pos+=1
+                    }
+
+                    database?.workDao()?.insert(works)
+                    currentWorksState.postValue(State.Loaded(Date()))
                 },{
-                    //делает что либо если произошла ошибка,
-                    //например устанавливаем состояние отсутствие подключения к сети и т.д.
+                    currentWorksState.postValue(State.NoConnection(Date()))
                 })
     }
 
@@ -47,6 +67,32 @@ class Repository @Inject constructor(
         },{
 
         })
+    }
+
+
+    sealed class State{
+
+        data class Waiting(
+            var date: Date? = null
+        ): State()
+
+        data class Loading(
+            var offset: Int? = null,
+            var count: Int? = null,
+            var key: Int? = null
+        ) : State()
+
+        data class NoConnection(
+            var date: Date? = null
+        ): State()
+
+        data class Loaded(
+            var date: Date? = null
+        ): State()
+
+        data class LoadedLocal(
+            var date: Date? = null
+        ): State()
     }
 
 }

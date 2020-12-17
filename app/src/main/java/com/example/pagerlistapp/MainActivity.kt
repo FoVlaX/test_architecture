@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         bindMenus()
 
         val url = "https://zaycev.net/musicset/dl/aca4339340db9b390126ffdbd793df97/2555349.json?spa=false" // your URL here
-       /* mediaPlayer = MediaPlayer().apply {
+       /*mediaPlayer = MediaPlayer().apply {
 
             setAudioAttributes(
                     AudioAttributes.Builder()
@@ -52,8 +52,6 @@ class MainActivity : AppCompatActivity() {
                 .findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
         NavigationUI.setupWithNavController(bottomMenu!!,
                 this.navHostFragment!!.navController)
-
-
     }
 
 }

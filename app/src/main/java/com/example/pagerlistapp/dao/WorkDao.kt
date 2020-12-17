@@ -7,7 +7,7 @@ import com.example.pagerlistapp.models.Work
 interface WorkDao {
     @Query("SELECT * FROM work")
     fun getAll(): List<Work?>?
-    @Query("SELECT * FROM work ORDER BY date_upload DESC LIMIT :offset, :count")
+    @Query("SELECT * FROM work ORDER BY positionInDb LIMIT :offset, :count")
     fun getWorks(offset: Int?, count: Int?): List<Work?>?
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(student: Work?)

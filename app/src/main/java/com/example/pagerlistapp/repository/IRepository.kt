@@ -17,7 +17,7 @@ interface IRepository {
     }
 
     @PageConfig(initialLoadSizeHint = 4,
-            pageSize = 2,
+            pageSize = 4,
             enablePlaceholders = false)
     @GenDataSource(sourceName = WORKS, type = Type.Positional)
     fun getWorks(offset: Int, count: Int) : List<Work?>?
