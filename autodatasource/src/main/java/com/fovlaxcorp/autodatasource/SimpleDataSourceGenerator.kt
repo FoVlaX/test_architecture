@@ -71,6 +71,7 @@ class SimpleDataSourceGenerator {
                 sourceFactory ?: throw IllegalArgumentException("Load Data function not found"),
                 pagedListConfig
             ).setInitialLoadKey(initialKey)
+                .setFetchExecutor(Executors.newFixedThreadPool(5))
                 .build()
 
         }

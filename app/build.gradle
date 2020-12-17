@@ -102,7 +102,6 @@ dependencies {
     def paging_version = "2.1.2"
 
     implementation "androidx.paging:paging-runtime-ktx:$paging_version" // For Kotlin use paging-runtime-ktx
-
     implementation "androidx.paging:paging-rxjava2-ktx:$paging_version" // For Kotlin use paging-rxjava2-ktx
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 

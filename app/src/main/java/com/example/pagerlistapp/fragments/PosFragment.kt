@@ -67,16 +67,23 @@ class PosFragment : Fragment(){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         recyclerView = view.findViewById(R.id.recycler_view)
+
         App.instance?.applicationComponent?.viewModelComponent()
             ?.with(this)
             ?.with(savedInstanceState)
             ?.build()
             ?.inject(this)
 
+
+
         recyclerView = view.findViewById(R.id.recycler_view)
+
         refreshSwipeLayout = view.findViewById(R.id.swipe_refresh)
+
         recyclerView.setHasFixedSize(true)
+
         val gridLayoutManager = GridLayoutManager(view.context, COLUMN_COUNT)
 
         /**
@@ -98,6 +105,7 @@ class PosFragment : Fragment(){
                 return countSpan
             }
         }
+
         // specify an adapter (see also next example)
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = concatAdapter
