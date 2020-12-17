@@ -31,5 +31,8 @@ interface IRepository {
     @KeyItem(name = EVENTS)
     fun getKeyForEvent(event: Event?): Int?
 
+    fun <T> getWorksState(): T
+
+
 }
 

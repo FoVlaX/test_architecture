@@ -184,7 +184,7 @@ class InfoActivity : AppCompatActivity() {
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
 
-        Record().start()
+        //Record().start()
 
         recordButton = RecordButton(this)
         playButton = PlayButton(this)

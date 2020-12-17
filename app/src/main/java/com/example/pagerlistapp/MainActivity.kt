@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     private fun bindMenus() {
         this.bottomMenu = findViewById<BottomNavigationView>(R.id.bottom_menu)
         this.navHostFragment = supportFragmentManager

@@ -1,6 +1,5 @@
 package com.example.pagerlistapp.repository
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.pagerlistapp.ArtistApiService
 import com.example.pagerlistapp.dao.AppDatabase
@@ -16,7 +15,7 @@ class Repository @Inject constructor(
 ) : IRepository {
 
 
-    val currentWorksState: MutableLiveData<State> = MutableLiveData(State.Waiting())
+    private val currentWorksState: MutableLiveData<State> = MutableLiveData(State.Waiting())
 
     override fun getWorks(offset: Int, count: Int) : List<Work?>?{
         currentWorksState.postValue(State.Loading(offset = offset, count = count))
@@ -37,6 +36,10 @@ class Repository @Inject constructor(
 
     override fun getKeyForEvent(event: Event?): Int{
         return event?.ids?.get(0)?:0
+    }
+
+    override fun <T> getWorksState(): T {
+        return  currentWorksState as T
     }
 
     //загружаем данные записываем их в бд
@@ -70,29 +73,6 @@ class Repository @Inject constructor(
     }
 
 
-    sealed class State{
 
-        data class Waiting(
-            var date: Date? = null
-        ): State()
-
-        data class Loading(
-            var offset: Int? = null,
-            var count: Int? = null,
-            var key: Int? = null
-        ) : State()
-
-        data class NoConnection(
-            var date: Date? = null
-        ): State()
-
-        data class Loaded(
-            var date: Date? = null
-        ): State()
-
-        data class LoadedLocal(
-            var date: Date? = null
-        ): State()
-    }
 
 }
