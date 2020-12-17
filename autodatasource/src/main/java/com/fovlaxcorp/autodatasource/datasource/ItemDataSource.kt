@@ -1,12 +1,8 @@
 package com.fovlaxcorp.autodatasource.datasource
 
-import android.util.Log
 import androidx.paging.ItemKeyedDataSource
 import com.fovlax.datasourcelibrary.datasource.GetKeyFunction
 import com.fovlax.datasourcelibrary.datasource.LoadDataItem
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.observers.DisposableCompletableObserver
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 class ItemDataSource<K,T> (
     private val loadDataItemAfter: LoadDataItem<K, T>?,
@@ -18,12 +14,22 @@ class ItemDataSource<K,T> (
         return getKeyFunction?.invoke(item)!!
     }
 
+    //при вызове invalidate метод отработает в том потоке который его вызвал,
+    // для упрощения использования я здесь сразу в другом потоке его запускаю
     override fun loadInitial(params: LoadInitialParams<K>, callback: LoadInitialCallback<T>) {
         if (loadDataItemAfter!=null || loadDataItemBefore!=null) {
+            Thread() {
                 callback.onResult(
-                        loadDataItemAfter?.invoke(getKeyFunction?.invoke(null)!!, params.requestedLoadSize)
-                                ?:(loadDataItemBefore?.invoke(getKeyFunction?.invoke(null)!!, params.requestedLoadSize)!!)
+                    loadDataItemAfter?.invoke(
+                        getKeyFunction?.invoke(null)!!,
+                        params.requestedLoadSize
+                    )
+                        ?: (loadDataItemBefore?.invoke(
+                            getKeyFunction?.invoke(null)!!,
+                            params.requestedLoadSize
+                        )!!)
                 )
+            }.start()
 
         }
 

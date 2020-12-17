@@ -16,11 +16,14 @@ class PosDataSource<T>(
 ) : PositionalDataSource<T>() {
 
 
+    //при вызове invalidate метод отработает в том потоке который его вызвал,
+    // для упрощения использования я здесь сразу в другом потоке его запускаю
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
+            Thread(){
             callback.onResult(
-                    loadDataPos?.invoke(params.requestedStartPosition,params.requestedLoadSize)?:ArrayList<T>(),
+                    loadDataPos?.invoke(params.requestedStartPosition, params.requestedLoadSize)?:ArrayList<T>(),
                     params.requestedStartPosition
-            )
+            )}.start()
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {

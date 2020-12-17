@@ -23,6 +23,7 @@ public class Work implements Serializable {
     private int type_id;
     private String masterwork;
     private String dt_finish;
+    private int positionInDb;
     private int sx;
     private int sy;
     private int sz;
@@ -49,6 +50,15 @@ public class Work implements Serializable {
     private Integer collection_id;
     @Ignore
     private Boolean isAnimated = false;
+
+
+    public int getPositionInDb() {
+        return positionInDb;
+    }
+
+    public void setPositionInDb(int positionInDb) {
+        this.positionInDb = positionInDb;
+    }
 
     public void setIsAnimated(){
         isAnimated = true;
