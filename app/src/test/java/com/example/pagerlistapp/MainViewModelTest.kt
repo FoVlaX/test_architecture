@@ -18,57 +18,40 @@ import org.robolectric.annotation.Config
 @Config(sdk = [23], shadows = [RepositoryContext::class], manifest = Config.NONE)
 class MainViewModelTest {
 
-
     //Rule for LiveData to make postValue work correctly
-    @Rule
-    @JvmField
-    var instantExecutorRule = InstantTaskExecutorRule()
-
+    @get:Rule var instantExecutorRule = InstantTaskExecutorRule()
     private val repository = Repository(null, null)
     private val viewModel = MainActivityViewModel(SavedStateHandle(), repository)
+    private val initialLoadSize = 16;
 
     @Test
-    fun `test on initial load count`(){
-        //wait when LivePagedListBuilder post paged list,
-        // at first it will be an empty paged list
-        waitPagedListInit()
-        //loading... wait data
-        Thread.sleep(2000)
-        //assert initial load count
-        Assert.assertEquals(viewModel.worksData.value?.size , 16)
+    fun `test on not null paged list`(){
+        val value =  viewModel.worksData.getOrAwaitValue()
+        Assert.assertNotNull(value)
     }
 
     @Test
     fun `assert initial items`(){
-        //wait when LivePagedListBuilder post paged list,
-        // at first it will be an empty paged list
-        waitPagedListInit()
-        //loading... wait data
-        Thread.sleep(2000)
-        //assert value
-        Assert.assertEquals(viewModel.worksData.value, repository.getWorks(0,16))
+        val expected = repository.getWorks(0,initialLoadSize)
+        val actual =  viewModel.worksData.getOrAwaitValue()
+        actual?.awaitChanging()
+        Assert.assertEquals(expected, actual)
+    }
+
+
+    @Test
+    fun `assert initial load count`() {
+        val actual =  viewModel.worksData.getOrAwaitValue()
+        actual?.awaitChanging()
+        Assert.assertEquals(initialLoadSize, actual?.size)
     }
 
     @Test
     fun `assert state viewModel`(){
-        Assert.assertTrue(viewModel.worksState.value is State.Waiting)
-        waitPagedListInit()
-        //loading... wait data
-        Thread.sleep(2000)
-        //assert state
+        viewModel.worksData.getOrAwaitValue(50)
+        val actual =  viewModel.worksData.getOrAwaitValue()
+        actual?.awaitChanging()
         Assert.assertTrue(viewModel.worksState.value is State.Loaded)
-    }
-
-    private fun waitPagedListInit(){
-        val syncObject = Object()
-        viewModel.worksData.observeForever {
-            synchronized(syncObject) {
-                syncObject.notify()
-            }
-        }
-        synchronized(syncObject) {
-            syncObject.wait()
-        }
     }
 
 }
