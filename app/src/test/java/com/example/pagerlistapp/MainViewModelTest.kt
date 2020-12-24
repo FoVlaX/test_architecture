@@ -48,7 +48,6 @@ class MainViewModelTest {
 
     @Test
     fun `assert state viewModel`(){
-        viewModel.worksData.getOrAwaitValue(50)
         val actual =  viewModel.worksData.getOrAwaitValue()
         actual?.awaitChanging()
         Assert.assertTrue(viewModel.worksState.value is State.Loaded)

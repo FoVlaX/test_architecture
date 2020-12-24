@@ -28,11 +28,10 @@ fun <T> PagedList<T>.awaitChanging(
             println("onRemoved $position $count")
             latch.countDown()
         }
-
     })
 
     if (!latch.await(time, timeUnit)){
-        throw Exception("PagedList has zero size")
+        throw Exception("PagedList hasn't changing")
     }
 
 }
