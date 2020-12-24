@@ -35,8 +35,13 @@ class PosFragment : Fragment(){
     }
 
     private lateinit var refreshSwipeLayout: SwipeRefreshLayout
-    private val worksAdapter: WorksAdapter = WorksAdapter()
-    private val loadAdapter = LoadAdapter()
+
+
+    @Inject
+    lateinit var worksAdapter: WorksAdapter
+
+    @Inject
+    lateinit var loadAdapter: LoadAdapter
 
     /**
      * Создаем новую конфигурацию для @ConcatAdapter и задаем параметру isolateViewTypes значение false,
@@ -56,7 +61,7 @@ class PosFragment : Fragment(){
      * зависеть от адаптера к которому отнситься элемент на запрашиваемой глобальной позиции,
      * В каждом адаптере перегружена функция getItemViewType(position) которая и вернет нужный тип элемента
      */
-    val concatAdapter = ConcatAdapter(config, worksAdapter, loadAdapter)
+    var concatAdapter:ConcatAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,8 +80,7 @@ class PosFragment : Fragment(){
             ?.with(savedInstanceState)
             ?.build()
             ?.inject(this)
-
-
+        concatAdapter = ConcatAdapter(config, worksAdapter, loadAdapter)
 
         recyclerView = view.findViewById(R.id.recycler_view)
 
@@ -99,7 +103,7 @@ class PosFragment : Fragment(){
                  * Если элемент это прогресс бар он будет занимать все колонки в GridLayout
                  * т.е. расплогаться так как надо
                  */
-                if (concatAdapter.getItemViewType(position) == R.layout.load_bar) {
+                if (concatAdapter?.getItemViewType(position) == R.layout.load_bar) {
                     countSpan = COLUMN_COUNT
                 }
                 return countSpan
