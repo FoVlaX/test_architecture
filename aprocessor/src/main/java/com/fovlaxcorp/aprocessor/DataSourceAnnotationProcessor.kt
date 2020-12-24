@@ -25,7 +25,7 @@ import kotlin.reflect.KClass
 class DataSourceAnnotationProcessor: AbstractProcessor() {
     companion object {
         const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
-        const val PATH = "com.fovlax.datasourcelibrary."
+        const val PATH = "com.fovlaxcorp.autodatasource."
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {

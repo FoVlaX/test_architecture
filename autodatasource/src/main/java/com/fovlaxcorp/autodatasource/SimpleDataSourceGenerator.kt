@@ -1,4 +1,4 @@
-package com.fovlax.datasourcelibrary
+package com.fovlaxcorp.autodatasource
 
 
 import androidx.lifecycle.LiveData
