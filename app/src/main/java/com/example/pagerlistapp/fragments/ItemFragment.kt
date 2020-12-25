@@ -15,8 +15,10 @@ import com.example.pagerlistapp.R
 import com.example.pagerlistapp.adapters.EventAdapter
 import com.example.pagerlistapp.adapters.LoadAdapter
 import com.example.pagerlistapp.application.App
+import com.example.pagerlistapp.models.Work
 import com.example.pagerlistapp.viewmodels.MainActivityViewModel
 import com.example.pagerlistapp.viewmodels.ViewModelsFactory
+import com.fovlax.datasourcelibrary.datasource.LoadDataPos
 import javax.inject.Inject
 
 
@@ -50,6 +52,8 @@ class ItemFragment : Fragment(){
     private val builder = ConcatAdapter.Config.Builder()
     private val config = builder.setIsolateViewTypes(false).build()
 
+    @Inject
+    lateinit var function: @JvmSuppressWildcards LoadDataPos<Work>
     /**
      * Создаем ConcatAdapter и передадим в конструктор созданную конфигурацию и два адаптера
      * Основные элементы будет регулировать адаптер возвращаемой функцией getAdapter(),
@@ -78,6 +82,7 @@ class ItemFragment : Fragment(){
                 ?.build()
                 ?.inject(this)
 
+        function.invoke(2, 2)
 
         concatAdapter = ConcatAdapter(config, eventAdapter, loadAdapter)
 

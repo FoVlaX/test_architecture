@@ -5,12 +5,12 @@ package com.fovlax.datasourcelibrary.datasource
  * @param Int count
  * */
 //Функия для позиционной дата соурс
-typealias LoadDataPos<T> = (Int, Int) -> List<T?>?
+typealias LoadDataPos<T> = (Int,  Int) ->   List< T?>?
 
 //if I set T? how null then i should return initial key in this function
-typealias GetKeyFunction<K,T> = (T?) -> K
+typealias GetKeyFunction<K,T> = (T?) -> @JvmSuppressWildcards  K
 //Функия для айтем дата соурс
-typealias LoadDataItem<K,T> = (K, Int) -> List<T?>?
+typealias LoadDataItem<K,T> = (K, Int) -> @JvmSuppressWildcards  List<T?>?
 
 
 

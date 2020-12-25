@@ -16,7 +16,7 @@ class RepositoryContext {
 
     fun getWorks(offset: Int, count: Int): List<Work?>?{
         currentWorksState.postValue(State.Loaded())
-        return List(count){
+        return List(10){
             val work = Work()
             work.work_id = it + offset
             work.name = "test names ${it + offset}"

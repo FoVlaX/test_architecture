@@ -3,27 +3,21 @@ package com.example.pagerlistapp.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
-
 import com.example.pagerlistapp.InfoActivity;
 import com.example.pagerlistapp.R;
 import com.example.pagerlistapp.models.Media;
 import com.example.pagerlistapp.models.Work;
 import com.example.pagerlistapp.util.ViewUtilKt;
-import com.example.pagerlistapp.viewmodels.MainActivityViewModel;
 
-import java.util.List;
 
 public class WorksAdapter extends PagedListAdapter<Work, RecyclerView.ViewHolder> {
 

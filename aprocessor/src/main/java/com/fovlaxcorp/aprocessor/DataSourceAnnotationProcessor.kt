@@ -1,13 +1,17 @@
 package com.fovlaxcorp.aprocessor
 
+import androidx.paging.PagedList
 import com.fovlaxcorp.autodatasource.GenDataSource
 import com.fovlaxcorp.autodatasource.KeyItem
 import com.fovlaxcorp.autodatasource.PageConfig
 import com.fovlaxcorp.autodatasource.WithDataSource
 import com.google.auto.service.AutoService
+import com.google.common.reflect.TypeToken
 import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import org.jetbrains.annotations.Nullable
 import java.io.File
+import java.lang.reflect.Type
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
@@ -16,9 +20,11 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeKind
 import javax.tools.Diagnostic
-import kotlin.reflect.KClass
+import kotlin.reflect.*
+import kotlin.reflect.full.createType
 
 
 @AutoService(Processor::class)
@@ -40,6 +46,7 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
 
     override fun getSupportedSourceVersion(): SourceVersion = SourceVersion.RELEASE_8
 
+
     override fun process(p0: MutableSet<out TypeElement>?, p1: RoundEnvironment?): Boolean {
 
         p1?.getElementsAnnotatedWith(WithDataSource::class.java)
@@ -54,6 +61,7 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
             }
         return true
     }
+
 
 
 
@@ -92,6 +100,8 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
         val keyFunMap = HashMap<String, KClass<*>>()
         val keyFunNullable = HashMap<String, Boolean>()
         val keyFunMapName = HashMap<String, String>()
+        val typeBoundCall = HashMap<String, ParameterSpec>()
+        val typeInvalidateCall = HashMap<String, ParameterSpec>()
 
         for (enclosed in element.enclosedElements) {
             if (enclosed.kind == ElementKind.METHOD) {
@@ -139,16 +149,27 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
                     val type = typeStr.substringAfter("<").substringBefore(">")
                     val name = genDataSource.sourceName
 
+                    val typetest = (enclosed as ExecutableElement).returnType as DeclaredType
+                    val typeIternal = typetest.typeArguments[0]
+
+                    var clazz:ClassName? = ClassName("androidx.paging", "PagedList").nestedClass("BoundaryCallback")
+                    val invCallbackType = ClassName("androidx.paging","DataSource").nestedClass("InvalidatedCallback").copy(nullable = true)
+                    val callbackTypeName = clazz?.parameterizedBy(typeIternal.asTypeName())
+                    val ops = ParameterSpec.builder("callback",callbackTypeName!!.copy(nullable = true)).defaultValue("null")
+                    val opsInvalidate = ParameterSpec.builder("invalidateCallback",invCallbackType!!.copy(nullable = true)).defaultValue("null")
+
                     when (genDataSource.type) {
                         GenDataSource.Type.Positional -> {
                             classBuilder.addFunction(
                                 FunSpec.builder("${name}LivePagedList")
                                     .addParameter("initialKey", Int::class)
+                                        .addParameter(ops.build())
+                                        .addParameter(opsInvalidate.build())
                                     .addCode("return ${PATH}SimpleDataSourceGenerator().getLiveDataMapped<Int,${type}>(")
                                     .addCode(" com.fovlax.datasourcelibrary.datasource.Functions(")
                                     .addCode("loadDataPos = { offset, count ->")
                                     .addCode("repository.${enclosed.simpleName}(offset,count) }),")
-                                    .addCode("${pConfig},initialKey)")
+                                    .addCode("${pConfig},initialKey, callback, invalidateCallback)")
                                     .build()
                             )
                         }
@@ -157,12 +178,16 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
                             afterFunMapName[genDataSource.sourceName] =
                                 enclosed.simpleName.toString()
                             afterFunMapConfig[genDataSource.sourceName] = pConfig
+                            typeBoundCall[genDataSource.sourceName] = ops.build()
+                            typeInvalidateCall[genDataSource.sourceName] = opsInvalidate.build()
                         }
                         GenDataSource.Type.ItemKeyedBefore -> {
                             beforeFunMapType[genDataSource.sourceName] = type
                             beforeFunMapName[genDataSource.sourceName] =
                                 enclosed.simpleName.toString()
                             beforeFunMapConfig[genDataSource.sourceName] = pConfig
+                            typeBoundCall[genDataSource.sourceName] = ops.build()
+                            typeInvalidateCall[genDataSource.sourceName] = opsInvalidate.build()
                         }
                     }
 
@@ -201,14 +226,17 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
             classBuilder.addFunction(
                 FunSpec.builder("${after.key}LivePagedList")
                     .addParameter(  ParameterSpec.builder("initialKey",typeName )
+
                         .build())
+                        .addParameter(typeBoundCall[after.key]!!)
+                        .addParameter(typeInvalidateCall[after.key]!!)
                     .addCode(beginFunc)
                     .addCode(" com.fovlax.datasourcelibrary.datasource.Functions(")
                     .addCode("${loadAfter},")
                     .addCode("${loadBefore},")
                     .addCode(getKeyFun)
                     .addCode("),")
-                    .addCode("${afterFunMapConfig[after.key]},initialKey)")
+                    .addCode("${afterFunMapConfig[after.key]},initialKey, callback, invalidateCallback)")
                     .build()
             )
 
@@ -240,13 +268,15 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
                 FunSpec.builder("${before.key}LivePagedList")
                     .addParameter(  ParameterSpec.builder("initialKey",typeName )
                         .build())
+                        .addParameter(typeBoundCall[before.key]!!)
+                        .addParameter(typeInvalidateCall[before.key]!!)
                     .addCode(beginFunc)
                     .addCode(" com.fovlax.datasourcelibrary.datasource.Functions(")
                     .addCode("${loadAfter},")
                     .addCode("${loadBefore},")
                     .addCode(getKeyFun)
                     .addCode("),")
-                    .addCode("${afterFunMapConfig[before.key]},initialKey)")
+                    .addCode("${afterFunMapConfig[before.key]},initialKey, callback, invalidateCallback)")
                     .build()
             )
 

@@ -6,6 +6,7 @@ import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.fovlax.datasourcelibrary.datasource.*
+import com.fovlaxcorp.autodatasource.datasource.PosDataSourceFactory
 import java.util.concurrent.Executors
 
 
@@ -13,14 +14,16 @@ class SimpleDataSourceGenerator {
     fun <K, T> getLiveDataMapped(
         functions: Functions<K,T>?,
         pageConfig: PagedList.Config?,
-        initialKey: K?
+        initialKey: K?,
+        boundaryCallback: PagedList.BoundaryCallback<T>? = null,
+        callback: DataSource.InvalidatedCallback? = null
     ): LiveData<PagedList<T>> {
 
         var sourceFactory: DataSource.Factory<K, T>? = null
 
         //Если имеем дело с позиционным дата сурсом
         if (functions?.loadDataPos != null) {
-            sourceFactory = PosDataSourceFactory<K, T>(functions.loadDataPos)
+            sourceFactory = PosDataSourceFactory<K, T>(functions.loadDataPos,callback)
         }
 
         //Если имеем дело с Item Data source
@@ -45,7 +48,8 @@ class SimpleDataSourceGenerator {
                 sourceFactory = ItemDataSourceFactory<K, T>(
                     loadDataItemAfter,
                     loadDataItemBefore,
-                    getKeyFunction
+                    getKeyFunction,
+                        callback
                 )
             }
         }
@@ -72,6 +76,7 @@ class SimpleDataSourceGenerator {
                 pagedListConfig
             ).setInitialLoadKey(initialKey)
                 .setFetchExecutor(Executors.newFixedThreadPool(5))
+                .setBoundaryCallback(boundaryCallback)
                 .build()
 
         }
