@@ -24,7 +24,7 @@ class ViewModelsFactory @Inject constructor
         var lastException: Exception? = null
         for (constructor in modelClass.constructors){
             try{
-                result = constructor.newInstance(handle,repository) as T?
+                result = constructor.newInstance(handle, repository) as T?
                 break
             }catch(ex: Exception){
                 lastException = ex

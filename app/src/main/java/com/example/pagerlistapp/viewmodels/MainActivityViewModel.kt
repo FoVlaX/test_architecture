@@ -10,18 +10,13 @@ import com.example.pagerlistapp.repository.IRepository
 import com.example.pagerlistapp.repository.IRepository_Impl
 import com.example.pagerlistapp.repository.State
 
-class MainActivityViewModel(val state: SavedStateHandle, var repository: IRepository) : ViewModel() {
+class MainActivityViewModel(val state: SavedStateHandle, private val repository: IRepository) : ViewModel() {
 
 
-    val worksData: LiveData<PagedList<Work>>
-    val eventsData: LiveData<PagedList<Event>>
+    val worksData: LiveData<PagedList<Work>> = IRepository_Impl(repository).worksLivePagedList(0)
+    val eventsData: LiveData<PagedList<Event>> = IRepository_Impl(repository).eventsLivePagedList( 0)
 
     val worksState: LiveData<State> = repository.getWorksState()
-
-    init{
-        worksData = IRepository_Impl(repository).worksLivePagedList(0)
-        eventsData = IRepository_Impl(repository).eventsLivePagedList( 0)
-    }
 
     fun refreshWorks(){
         worksData.value?.dataSource?.invalidate()

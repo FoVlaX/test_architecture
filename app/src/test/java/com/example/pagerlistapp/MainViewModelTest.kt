@@ -3,7 +3,12 @@ package com.example.pagerlistapp
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
+import androidx.paging.DataSource
+import androidx.paging.PagedList
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.pagerlistapp.models.Event
+import com.example.pagerlistapp.models.Work
+import com.example.pagerlistapp.repository.IRepository_Impl
 import com.example.pagerlistapp.repository.Repository
 import com.example.pagerlistapp.repository.State
 import com.example.pagerlistapp.viewmodels.MainActivityViewModel
@@ -21,36 +26,54 @@ class MainViewModelTest {
     //Rule for LiveData to make postValue work correctly
     @get:Rule var instantExecutorRule = InstantTaskExecutorRule()
     private val repository = Repository(null, null)
-    private val viewModel = MainActivityViewModel(SavedStateHandle(), repository)
-    private val initialLoadSize = 16;
-
-    @Test
-    fun `test on not null paged list`(){
-        val value =  viewModel.worksData.getOrAwaitValue()
-        Assert.assertNotNull(value)
-    }
-
-    @Test
-    fun `assert initial items`(){
-        val expected = repository.getWorks(0,initialLoadSize)
-        val actual =  viewModel.worksData.getOrAwaitValue()
-        actual?.awaitChanging()
-        Assert.assertEquals(expected, actual)
-    }
 
 
     @Test
-    fun `assert initial load count`() {
-        val actual =  viewModel.worksData.getOrAwaitValue()
-        actual?.awaitChanging()
-        Assert.assertEquals(initialLoadSize, actual?.size)
+    fun `boundary callback test`(){
+
+        val boundaryCallback = object : PagedList.BoundaryCallback<Work>(){
+            override fun onItemAtEndLoaded(itemAtEnd: Work) {
+                println("asd")
+            }
+
+            override fun onItemAtFrontLoaded(itemAtFront: Work) {
+                println("asdad")
+            }
+
+            override fun onZeroItemsLoaded() {
+                println("zero")
+            }
+        }
+
+        val boundaryCallback2 = object : PagedList.BoundaryCallback<Event>(){
+            override fun onItemAtEndLoaded(itemAtEnd: Event) {
+                println("asd")
+            }
+
+            override fun onItemAtFrontLoaded(itemAtFront: Event) {
+                println("asdad")
+            }
+
+            override fun onZeroItemsLoaded() {
+                println("zero")
+            }
+        }
+
+        val invalidatedCallback = object : DataSource.InvalidatedCallback{
+            override fun onInvalidated() {
+                println("asdasdad")
+            }
+
+        }
+
+        val liveData = IRepository_Impl(repository).worksLivePagedList(0, boundaryCallback, invalidatedCallback)
+        val eventData = IRepository_Impl(repository).eventsLivePagedList(0, boundaryCallback2, invalidatedCallback)
+        eventData?.getOrAwaitValue ()
+        eventData.value?.dataSource?.invalidate()
+        liveData?.getOrAwaitValue()
+
     }
 
-    @Test
-    fun `assert state viewModel`(){
-        val actual =  viewModel.worksData.getOrAwaitValue()
-        actual?.awaitChanging()
-        Assert.assertTrue(viewModel.worksState.value is State.Loaded)
-    }
+
 
 }

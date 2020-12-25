@@ -22,7 +22,7 @@ ext {
     siteUrl = 'https://github.com/'
     gitUrl = 'https://github.com/'
 
-    libraryVersion = '0.0.2'
+    libraryVersion = '0.0.3'
 
     developerId = 'com'
     developerName = 'fovlax fovlax'
