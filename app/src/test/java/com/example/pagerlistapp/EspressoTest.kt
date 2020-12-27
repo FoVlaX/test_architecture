@@ -1,31 +1,23 @@
 package com.example.pagerlistapp
 
-import android.content.Intent
 import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.getIntents
-import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.pagerlistapp.adapters.WorksAdapter
+import com.example.pagerlistapp.adapters.ImageAdapter
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 // for assertions on Java 8 types (Streams and java.util.Optional)
 import com.google.common.truth.Truth.assertThat
 import org.hamcrest.Matcher
 import org.junit.Before
-import org.junit.Rule
 
 
 @RunWith(AndroidJUnit4::class)
@@ -50,7 +42,7 @@ class EspressoTest  {
         Espresso.onView(ViewMatchers.withId(R.id.recycler_view))
             .perform(
                 // scrollTo will fail the test if no item matches.
-                RecyclerViewActions.actionOnItemAtPosition<WorksAdapter.WorkHolder>(
+                RecyclerViewActions.actionOnItemAtPosition<ImageAdapter.ImageHolder>(
                     0,
                     customAction(R.id.item)
                 )
