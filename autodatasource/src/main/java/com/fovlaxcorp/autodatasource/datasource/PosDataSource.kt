@@ -6,8 +6,7 @@ import com.fovlax.datasourcelibrary.datasource.LoadDataPos
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.observers.DisposableCompletableObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
-
-
+import java.lang.Exception
 
 
 class PosDataSource<T>(
@@ -20,10 +19,11 @@ class PosDataSource<T>(
     // для упрощения использования я здесь сразу в другом потоке его запускаю
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
             Thread(){
-            callback.onResult(
-                    loadDataPos?.invoke(params.requestedStartPosition, params.requestedLoadSize)?:ArrayList<T>(),
-                    params.requestedStartPosition
-            )}.start()
+                    callback.onResult(
+                            loadDataPos?.invoke(params.requestedStartPosition, params.requestedLoadSize)?:ArrayList<T>(),
+                            params.requestedStartPosition
+                    )
+            }.start()
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {

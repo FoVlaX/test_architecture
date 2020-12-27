@@ -1,7 +1,6 @@
 package com.example.pagerlistapp
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
@@ -11,16 +10,12 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.intent.Intents.getIntents
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import com.example.pagerlistapp.adapters.WorksAdapter
+import com.example.pagerlistapp.adapters.ImageAdapter
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.Assert.*
-import java.util.*
 // for assertions on Java 8 types (Streams and java.util.Optional)
 import com.google.common.truth.Truth.assertThat
-import com.google.common.truth.Truth.assertWithMessage
 import org.hamcrest.Matcher
 import org.junit.Rule
 
@@ -47,7 +42,7 @@ class ExampleInstrumentedTest {
         onView(ViewMatchers.withId(R.id.recycler_view))
                 .perform(
                         // scrollTo will fail the test if no item matches.
-                        RecyclerViewActions.actionOnItemAtPosition<WorksAdapter.WorkHolder>(
+                        RecyclerViewActions.actionOnItemAtPosition<ImageAdapter.ImageHolder>(
                                 0,
                                 click()
                         )

@@ -3,13 +3,13 @@ package com.example.pagerlistapp.di
 import android.os.Bundle
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.pagerlistapp.MainActivity
-import com.example.pagerlistapp.fragments.ItemFragment
 import com.example.pagerlistapp.fragments.PosFragment
 import dagger.BindsInstance
 import dagger.Subcomponent
 
 @Subcomponent
 interface ViewModelComponent {
+
     @Subcomponent.Builder
     interface Builder {
         @BindsInstance
@@ -21,5 +21,4 @@ interface ViewModelComponent {
 
     fun inject(mainActivity: MainActivity)
     fun inject(posFragment: PosFragment)
-    fun inject(itemFragment: ItemFragment)
 }

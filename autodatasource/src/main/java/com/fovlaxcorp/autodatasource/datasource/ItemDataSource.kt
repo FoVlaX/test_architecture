@@ -3,6 +3,7 @@ package com.fovlaxcorp.autodatasource.datasource
 import androidx.paging.ItemKeyedDataSource
 import com.fovlax.datasourcelibrary.datasource.GetKeyFunction
 import com.fovlax.datasourcelibrary.datasource.LoadDataItem
+import java.lang.Exception
 
 class ItemDataSource<K,T> (
     private val loadDataItemAfter: LoadDataItem<K, T>?,
@@ -19,16 +20,18 @@ class ItemDataSource<K,T> (
     override fun loadInitial(params: LoadInitialParams<K>, callback: LoadInitialCallback<T>) {
         if (loadDataItemAfter!=null || loadDataItemBefore!=null) {
             Thread() {
-                callback.onResult(
-                    loadDataItemAfter?.invoke(
-                        getKeyFunction?.invoke(null)!!,
-                        params.requestedLoadSize
-                    )
-                        ?: (loadDataItemBefore?.invoke(
+
+                    callback.onResult(
+                        loadDataItemAfter?.invoke(
                             getKeyFunction?.invoke(null)!!,
                             params.requestedLoadSize
-                        )!!)
-                )
+                        )
+                            ?: (loadDataItemBefore?.invoke(
+                                getKeyFunction?.invoke(null)!!,
+                                params.requestedLoadSize
+                            )!!)
+                    )
+
             }.start()
 
         }

@@ -3,20 +3,16 @@ package com.example.pagerlistapp
 // for assertions on Java 8 types (Streams and java.util.Optional)
 
 import android.content.Intent
-import androidx.core.view.get
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.example.pagerlistapp.adapters.WorksAdapter
+import com.example.pagerlistapp.adapters.ImageAdapter
 import com.example.pagerlistapp.fragments.PosFragment
 
 import com.google.common.truth.Truth.assertThat
 
-import kotlinx.coroutines.awaitAll
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -85,7 +81,7 @@ class MainActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.recycler_view))
             .perform(
                 // scrollTo will fail the test if no item matches.
-                RecyclerViewActions.actionOnItemAtPosition<WorksAdapter.WorkHolder>(
+                RecyclerViewActions.actionOnItemAtPosition<ImageAdapter.ImageHolder>(
                     0,
                     click()
                 )
