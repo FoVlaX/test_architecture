@@ -14,13 +14,13 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "BASE_URL", '"https://api.arthive.com/v2.0/"'
         buildConfigField "String", "BASE_IMAGE_URL", '"https://contextualwebsearch-websearch-v1.p.rapidapi.com/"'
         buildConfigField "Integer", "ARTIST_ID", '739'
         buildConfigField "String", "BASE_KEY", '"x-rapidapi-key"'
         buildConfigField "String", "KEY_VALUE", '"cdd6e0432bmsh1b2c6dd9fbbfb03p1347fbjsnfea297e080e6"'
         buildConfigField "String", "BASE_HOST", '"x-rapidapi-host"'
         buildConfigField "String", "HOST_VALUE", '"contextualwebsearch-websearch-v1.p.rapidapi.com"'
+        buildConfigField "String", "BASE_RICK_AND_MORTY_URL", '"https://rickandmortyapi.com/api/"'
 
         multiDexEnabled true
     }

@@ -6,5 +6,13 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.pagerlistapp.fragments.PosFragment"
-        android:label="MainFragment" />
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_rickAndMortyFragment"
+            app:destination="@id/rickAndMortyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/rickAndMortyFragment"
+        android:name="com.example.pagerlistapp.fragments.RickAndMortyFragment"
+        android:label="RickAndMortyFragment" />
 </navigation>

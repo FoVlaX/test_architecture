@@ -2,6 +2,7 @@ package com.example.pagerlistapp.di
 
 
 import com.example.pagerlistapp.ImageApiService
+import com.example.pagerlistapp.RickAndMortyApiService
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -13,5 +14,11 @@ class NetworkModule {
     @Singleton
     fun apiImage(): ImageApiService{
         return ImageApiService.create()
+    }
+
+    @Provides
+    @Singleton
+    fun apiRockAndMorty(): RickAndMortyApiService{
+        return RickAndMortyApiService.create()
     }
 }

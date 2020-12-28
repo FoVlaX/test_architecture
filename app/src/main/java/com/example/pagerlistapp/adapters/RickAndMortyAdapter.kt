@@ -12,16 +12,14 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pagerlistapp.R
-import com.example.pagerlistapp.amodels.Value
+import com.example.pagerlistapp.amodels.RDataItem
 import com.squareup.picasso.Picasso
 
-class ImageAdapter : PagedListAdapter<Value, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
-
-
+class RickAndMortyAdapter : PagedListAdapter<RDataItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_image, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_character, parent, false)
         return ImageHolder(view)
     }
 
@@ -32,7 +30,7 @@ class ImageAdapter : PagedListAdapter<Value, RecyclerView.ViewHolder>(DIFF_CALLB
 
             val placeHolderColor: String = "#2233FF"
 
-            val img_url = value?.url?.substringBefore("?")
+            val img_url = value?.image?.substringBefore("?")
 
             Picasso.get()
                 .load(img_url)
@@ -40,7 +38,9 @@ class ImageAdapter : PagedListAdapter<Value, RecyclerView.ViewHolder>(DIFF_CALLB
                 .error(R.drawable.motifation)
                 .into(holder.imageView)
 
-            holder.textView.text = value?.title?:""
+            holder.name.text = value?.name
+            holder.status.text = "${value?.status} - ${value?.gender}"
+
         }
     }
 
@@ -49,26 +49,28 @@ class ImageAdapter : PagedListAdapter<Value, RecyclerView.ViewHolder>(DIFF_CALLB
     }
 
     class ImageHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: ImageView = view.findViewById(R.id.image_view)
-        val textView: TextView = view.findViewById(R.id.text_image)
+        val imageView: ImageView = view.findViewById(R.id.character_id)
+        val name: TextView = view.findViewById(R.id.text_name)
+        val status: TextView = view.findViewById(R.id.status)
     }
 
     companion object {
-        private val DIFF_CALLBACK: DiffUtil.ItemCallback<Value> =
-            object : DiffUtil.ItemCallback<Value>() {
+        private val DIFF_CALLBACK: DiffUtil.ItemCallback<RDataItem> =
+            object : DiffUtil.ItemCallback<RDataItem>() {
                 // Concert details may have changed if reloaded from the database,
                 // but ID is fixed.
-                override fun areItemsTheSame(oldWork: Value, newWork: Value): Boolean {
-                    return oldWork.numberCount == newWork.numberCount
+                override fun areItemsTheSame(oldWork: RDataItem, newWork: RDataItem): Boolean {
+                    return oldWork.id == newWork.id
                 }
 
                 @SuppressLint("DiffUtilEquals")
                 override fun areContentsTheSame(
-                    oldWork: Value,
-                    newWork: Value
+                    oldWork: RDataItem,
+                    newWork: RDataItem
                 ): Boolean {
                     return oldWork == newWork
                 }
             }
     }
+
 }

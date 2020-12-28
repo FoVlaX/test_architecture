@@ -5,4 +5,10 @@
         android:id="@+id/mainFragment"
         android:icon="@android:drawable/ic_dialog_alert"
         android:title="@string/positional" />
+
+    <item
+        android:id="@+id/rickAndMortyFragment"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="@string/itemkeyed" />
+
 </menu>
