@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
@@ -106,6 +107,10 @@ class RickAndMortyFragment : Fragment() {
         textInput = activity?.findViewById(R.id.text_input)!!
 
         imageView = activity?.findViewById(R.id.search_button)!!
+
+        textInput.visibility = View.GONE
+        imageView.visibility = View.GONE
+        activity?.findViewById<TextView>(R.id.title_app_bar)?.visibility = View.VISIBLE
 
         recyclerView.setHasFixedSize(true)
         recyclerView.addItemDecoration(RecyclerViewMargin(10,COLUMN_COUNT))

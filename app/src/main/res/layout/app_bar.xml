@@ -10,6 +10,13 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Rick and Morty"
+                android:textColor="#FFFFFF"
+                android:textSize="25dp"
+                android:id="@+id/title_app_bar"></TextView>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
