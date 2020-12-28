@@ -1,0 +1,64 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+ext {
+    bintrayRepo = 'autodatasource'
+    bintrayName = 'annotations'
+
+    publishedGroupId = 'com.fovlaxcorp.autodatasource'
+    libraryName = 'autodatasource'
+    artifact = 'annotations'
+
+    libraryDescription = 'autodatasource'
+
+    siteUrl = 'https://github.com/'
+    gitUrl = 'https://github.com/'
+
+    libraryVersion = '0.0.3'
+
+    developerId = 'com'
+    developerName = 'fovlax fovlax'
+    developerEmail = 'com'
+
+    licenseName = 'fovlax fovlax fovlax License, fovlax 2.0'
+    licenseUrl = 'fovlax'
+    allLicenses = ["Apache-2.0"]
+
+}
+
+bintray {
+    pkg {
+        userOrg = 'fovlaxcorp'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "io.reactivex.rxjava3:rxjava:3.0.6"
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+
+
+    def paging_version = "2.1.2"
+    def lifecycle_version = "2.2.0"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version" // For Kotlin use paging-runtime-ktx
+    // alternatively - without Android dependencies for testing
+    testImplementation "androidx.paging:paging-common-ktx:$paging_version" // For Kotlin use paging-common-ktx
+
+    // optional - RxJava support
+    implementation "androidx.paging:paging-rxjava2-ktx:$paging_version" // For Kotlin use paging-rxjava2-ktx
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'

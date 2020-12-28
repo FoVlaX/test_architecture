@@ -4,9 +4,5 @@
     <item
         android:id="@+id/mainFragment"
         android:icon="@android:drawable/ic_dialog_alert"
-        android:title="POSITIONAL" />
-    <item
-        android:id="@+id/itemFragment"
-        android:icon="@android:drawable/ic_dialog_map"
-        android:title="ITEMSKEY" />
+        android:title="@string/positional" />
 </menu>

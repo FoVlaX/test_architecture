@@ -1,21 +1,32 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+
+
 
 
 android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.example.my_project"
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "BASE_URL", '"https://api.arthive.com/v2.0/"'
+        buildConfigField "String", "BASE_IMAGE_URL", '"https://contextualwebsearch-websearch-v1.p.rapidapi.com/"'
         buildConfigField "Integer", "ARTIST_ID", '739'
+        buildConfigField "String", "BASE_KEY", '"x-rapidapi-key"'
+        buildConfigField "String", "KEY_VALUE", '"cdd6e0432bmsh1b2c6dd9fbbfb03p1347fbjsnfea297e080e6"'
+        buildConfigField "String", "BASE_HOST", '"x-rapidapi-host"'
+        buildConfigField "String", "HOST_VALUE", '"contextualwebsearch-websearch-v1.p.rapidapi.com"'
+
+        multiDexEnabled true
     }
+
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -34,46 +45,48 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests{
+            includeAndroidResources = true
+        }
     }
+
 
 }
 
 
 dependencies {
-    def nav_version = "2.3.0"
+    def nav_version = "2.3.2"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0"
-    implementation 'androidx.core:core-ktx:1.3.1'
+
+    implementation project(":annotations")
+    implementation project(":autodatasource")
+    kapt project(":aprocessor")
+
+    implementation 'androidx.core:core-ktx:1.3.2'
     implementation "androidx.appcompat:appcompat:1.2.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.0.1"
-    implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha04'
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-beta01'
     implementation 'com.google.android.material:material:1.2.1'
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
-    implementation 'org.projectlombok:lombok:1.18.12'
     implementation "io.reactivex.rxjava3:rxjava:3.0.6"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
-
-
     implementation "androidx.fragment:fragment-ktx:1.2.5"
-
     //room
     def room_version = "2.2.5"
-
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-
 
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
 
     // optional - Test helpers
-    testImplementation "androidx.room:room-testing:$room_version"
+
 
     //Dagger-2
 
@@ -81,7 +94,7 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.29.1'
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.7.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.7.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.7.0'
     implementation 'com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0'
@@ -93,18 +106,52 @@ dependencies {
     def paging_version = "2.1.2"
 
     implementation "androidx.paging:paging-runtime-ktx:$paging_version" // For Kotlin use paging-runtime-ktx
-
-    // alternatively - without Android dependencies for testing
-    testImplementation "androidx.paging:paging-common-ktx:$paging_version" // For Kotlin use paging-common-ktx
-
-    // optional - RxJava support
     implementation "androidx.paging:paging-rxjava2-ktx:$paging_version" // For Kotlin use paging-rxjava2-ktx
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.20"
 
-    testCompile 'junit:junit:4.12'
-    testCompile "org.robolectric:robolectric:3.4.2"
+    testImplementation "androidx.room:room-testing:$room_version"
+    testImplementation "androidx.paging:paging-common-ktx:$paging_version"
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.robolectric:robolectric:4.4'
+    testImplementation "io.mockk:mockk:1.10.3-jdk8"
+    testImplementation "com.google.truth:truth:1.1"
+    testImplementation "com.google.truth.extensions:truth-java8-extension:1.1"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation 'androidx.test:runner:1.3.0'
+    testImplementation 'androidx.test:rules:1.3.0'
+    testImplementation 'androidx.test:core:1.3.0'
+    testImplementation 'androidx.test:runner:1.3.0'
+    testImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
+    testImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
+    testImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0'
+    testImplementation 'androidx.test.espresso:espresso-web:3.3.0'
+    testImplementation 'androidx.test.espresso.idling:idling-concurrent:3.3.0'
+    testImplementation 'androidx.test.ext:junit:1.1.2'
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    // Core library
+    androidTestImplementation 'androidx.test:core:1.3.0'
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+    // Assertions
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.ext:truth:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.3.0'
+    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.3.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    // The following Espresso dependency can be either "implementation"
+    // or "androidTestImplementation", depending on whether you want the
+    // dependency to appear on your APK's compile classpath or the test APK
+    // classpath.
+    androidTestImplementation 'androidx.test.espresso:espresso-idling-resource:3.3.0'
+
 }

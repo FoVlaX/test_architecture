@@ -1,73 +1,65 @@
 package com.example.pagerlistapp.repository
 
-import com.example.pagerlistapp.ArtistApiService
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.pagerlistapp.ImageApiService
+import com.example.pagerlistapp.amodels.Value
 import com.example.pagerlistapp.dao.AppDatabase
-import com.example.pagerlistapp.models.Event
-import com.example.pagerlistapp.models.Work
-import com.example.pagerlistapp.simpledatasourcegenerator.AbstractDataSourceRepository
-import com.example.pagerlistapp.simpledatasourcegenerator.annotations.GenDataSource
-import com.example.pagerlistapp.simpledatasourcegenerator.annotations.KeyItem
-import com.example.pagerlistapp.simpledatasourcegenerator.annotations.PageConfig
 import javax.inject.Inject
 
+
 class Repository @Inject constructor(
-    val database: AppDatabase,
-    val api: ArtistApiService
-) : AbstractDataSourceRepository(Repository::class) {
+    val database: AppDatabase?,
+    val apiImage: ImageApiService
+) : IRepository {
 
-    //функция для которой нужен позиционный дата сурс
-    //              offset, count
-    // должная быть (Int, Int): List<*>
-    @PageConfig(initialLoadSizeHint = 15, pageSize = 5, enablePlaceholders = false)
-    @GenDataSource(sourceName = "works", type = GenDataSource.Type.Positional)
-    private fun getWorks(offset: Int, count: Int) : List<Work?>?{
-        refreshDao(offset,count)
-        return database.workDao()?.getWorks(offset,count)
-    }
-    //функция для которой нужен ItemKeyed дата сурс
-    //              afterKey, count
-    // должная быть (*, Int): List<*>
-    @PageConfig(initialLoadSizeHint = 2
-    ,pageSize = 4
-    ,enablePlaceholders = false)
-    @GenDataSource(sourceName = "events", type = GenDataSource.Type.ItemKeyedAfter)
-    private fun getNews(beforeId: Int, count: Int) : List<Event?>?{
-        refreshNews(beforeId,count);
-        return database.eventDao()?.getEvents(beforeId,count)
-    }
-    // Если в запросе надо передавать более этих двух необходимых параметров
-    // например какие либо фильтры
-    // можно сделать их в виде параметров и использовать в функциях загрузки из интернета
-    // и передавать в запросе к дао
-    // т.е. например установили какие либо фильтры вызвали у PagedList invalidate и он запустит
-    // помеченную аннотацией функцию, которая уже сделает запрос с новыми доп параметрами
 
-    //функция для получения ключей в ItemKeyedDataSource
-    @KeyItem(name = "events")
-    private fun getKeyForEvent(event: Event?): Int{
-        return event?.ids?.get(0)?:0
+    private var query: String? = "cat"
+
+    private val currentWorksState: MutableLiveData<State> = MutableLiveData(State.Waiting())
+
+    override fun setQuery(query: String?){
+        this.query = query
     }
 
-    //загружаем данные записываем их в бд
-    private fun refreshDao(offset: Int, count: Int){
-        api.getWorks(offset = offset, count = count)
-                .subscribe({
-                    database.workDao()?.insert(it?.data?.getArtWorks()!!)
-                },{
-                    //делает что либо если произошла ошибка,
-                    //например устанавливаем состояние отсутствие подключения к сети и т.д.
-                })
+    private val status: MutableLiveData<State> = MutableLiveData(State.Loading())
+
+   override fun getStatus() : LiveData<State>{
+        return status
     }
 
-    private fun refreshNews(beforeEventId: Int,
-                count: Int) {
-        ArtistApiService.create().getArtistNews(beforeEventId = beforeEventId,
-                count = count
-        ).subscribe({
-            database.eventDao()?.insert(it?.data?.getNewsEvents()!!)
+    override fun getImages(offset: Int, count: Int): List<Value?>? {
+        status.postValue(State.Loading())
+        refreshImagesInDb(offset, count)
+        val data = database?.valueDao()?.getForName(query!!, offset,count)
+        if (data?.size?:0 == 0){
+            status.postValue(State.Loaded())
+        }
+        return data?:List(0){
+            Value()
+        }
+    }
+
+    private fun refreshImagesInDb(offset: Int, count: Int){
+
+        val pageNumber = offset / count + 1
+        val data = apiImage.getImagesForName(query?:"ou",pageNumber, count)
+        var valueList: List<Value?>? = null
+        data.subscribe({
+
+            valueList = it.value
+
+            (0 until valueList?.size!!).forEach {
+                valueList?.get(it)?.numberCount = offset + it
+                valueList?.get(it)?.nameValue = query
+            }
+
+            database?.valueDao()?.insert(valueList!!)
+
         },{
 
         })
+
     }
 
 }

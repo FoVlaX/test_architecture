@@ -2,6 +2,7 @@ package com.example.pagerlistapp.di
 
 import android.os.Bundle
 import androidx.savedstate.SavedStateRegistryOwner
+import com.example.pagerlistapp.repository.Repository
 import com.example.pagerlistapp.viewmodels.ViewModelsFactory
 import dagger.Module
 import dagger.Provides
@@ -13,7 +14,7 @@ class ViewModelsModel {
     @Singleton
     @Provides
     fun getFactory(owner: SavedStateRegistryOwner,
-                   defaultArgs: Bundle?) : ViewModelsFactory {
-        return ViewModelsFactory(owner, defaultArgs)
+                   defaultArgs: Bundle?, repository: Repository) : ViewModelsFactory {
+        return ViewModelsFactory(owner, defaultArgs, repository)
     }
 }
