@@ -166,4 +166,16 @@ class PosFragment : Fragment(){
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!viewModel.imageData.hasActiveObservers()){
+            viewModel.imageData.observe(viewLifecycleOwner, observer)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.imageData.removeObserver(observer)
+    }
+
 }
