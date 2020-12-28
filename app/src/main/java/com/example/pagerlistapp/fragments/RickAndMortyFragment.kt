@@ -20,6 +20,7 @@ import com.example.pagerlistapp.adapters.LoadAdapter
 import com.example.pagerlistapp.adapters.RickAndMortyAdapter
 import com.example.pagerlistapp.amodels.RDataItem
 import com.example.pagerlistapp.application.App
+import com.example.pagerlistapp.decorations.RecyclerViewMargin
 import com.example.pagerlistapp.repository.State
 import com.example.pagerlistapp.viewmodels.MainActivityViewModel
 import com.example.pagerlistapp.viewmodels.ViewModelsFactory
@@ -107,7 +108,7 @@ class RickAndMortyFragment : Fragment() {
         imageView = activity?.findViewById(R.id.search_button)!!
 
         recyclerView.setHasFixedSize(true)
-
+        recyclerView.addItemDecoration(RecyclerViewMargin(10,COLUMN_COUNT))
         val gridLayoutManager = GridLayoutManager(view.context, COLUMN_COUNT)
 
         /**

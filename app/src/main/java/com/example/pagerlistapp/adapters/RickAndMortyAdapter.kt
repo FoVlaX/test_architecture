@@ -40,6 +40,7 @@ class RickAndMortyAdapter : PagedListAdapter<RDataItem, RecyclerView.ViewHolder>
 
             holder.name.text = value?.name
             holder.status.text = "${value?.status} - ${value?.gender}"
+            holder.location.text = value?.location?.name
 
         }
     }
@@ -52,6 +53,7 @@ class RickAndMortyAdapter : PagedListAdapter<RDataItem, RecyclerView.ViewHolder>
         val imageView: ImageView = view.findViewById(R.id.character_id)
         val name: TextView = view.findViewById(R.id.text_name)
         val status: TextView = view.findViewById(R.id.status)
+        val location: TextView = view.findViewById(R.id.last_location)
     }
 
     companion object {
