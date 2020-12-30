@@ -16,17 +16,10 @@ class AdaptersModule {
         return AdaptersFactory(adapters = adapters)
     }
 
-    @IntoSet
+    @ElementsIntoSet
     @Provides
-    fun loadAdapter() : KClass<*> = LoadAdapter::class
-
-    @Provides
-    @IntoSet
-    fun worksAdapter() : KClass<*>  =  ImageAdapter::class
-
-    @IntoSet
-    @Provides
-    fun rickAndMortyAdapter() :  KClass<*> =  RickAndMortyAdapter::class
-
+    fun appAdapters() : Set<KClass<*>> = HashSet(arrayListOf(
+            LoadAdapter::class,  ImageAdapter::class, RickAndMortyAdapter::class
+    ))
 
 }

@@ -27,7 +27,7 @@ public class LoadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     public void visibleLoadBar(){
-        if (progressBar!=null && textView!=null){
+        if (progressBar!=null && textView!=null) {
             progressBar.setVisibility(View.VISIBLE);
             textView.setVisibility(View.GONE);
         }

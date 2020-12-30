@@ -19,10 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.pagerlistapp.R
-import com.example.pagerlistapp.adapters.IAdapterFactory
-import com.example.pagerlistapp.adapters.ImageAdapter
-import com.example.pagerlistapp.adapters.LoadAdapter
-import com.example.pagerlistapp.adapters.RickAndMortyAdapter
+import com.example.pagerlistapp.adapters.*
 import com.example.pagerlistapp.amodels.RDataItem
 import com.example.pagerlistapp.application.App
 import com.example.pagerlistapp.decorations.RecyclerViewMargin
@@ -44,8 +41,14 @@ class RickAndMortyFragment : BaseFragment() {
     }
 
     lateinit var refreshSwipeLayout: SwipeRefreshLayout
-    lateinit var rickAndMortyAdapter: RickAndMortyAdapter
-    lateinit var loadAdapter: LoadAdapter
+
+    private val rickAndMortyAdapter: RickAndMortyAdapter by createAdapters{
+        adaptersFactory
+    }
+
+    private val loadAdapter: LoadAdapter by createAdapters{
+        adaptersFactory
+    }
     lateinit var textInput: EditText
     lateinit var imageView: ImageView
     lateinit var status: LiveData<State>
@@ -88,8 +91,6 @@ class RickAndMortyFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         recyclerView = view.findViewById(R.id.recycler_view)
-        rickAndMortyAdapter = adaptersFactory.create(RickAndMortyAdapter::class)
-        loadAdapter = adaptersFactory.create(LoadAdapter::class)
         concatAdapter = ConcatAdapter(config, rickAndMortyAdapter, loadAdapter)
         recyclerView = view.findViewById(R.id.recycler_view)
         refreshSwipeLayout = view.findViewById(R.id.swipe_refresh)
