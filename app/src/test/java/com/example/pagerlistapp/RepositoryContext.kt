@@ -1,15 +1,13 @@
 package com.example.pagerlistapp
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.example.pagerlistapp.models.Work
-import com.example.pagerlistapp.repository.Repository
+import com.example.pagerlistapp.repository.DateRepository
 import com.example.pagerlistapp.repository.State
 import org.robolectric.annotation.Implements
-import org.robolectric.annotation.RealObject
 
 
-@Implements(Repository::class)
+@Implements(DateRepository::class)
 class RepositoryContext {
 
     private val currentWorksState: MutableLiveData<State> = MutableLiveData(State.Waiting())

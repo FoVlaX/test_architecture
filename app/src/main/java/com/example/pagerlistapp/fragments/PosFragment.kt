@@ -2,8 +2,6 @@ package com.example.pagerlistapp.fragments
 
 import android.os.AsyncTask
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,46 +10,48 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.pagerlistapp.R
+import com.example.pagerlistapp.adapters.AdaptersFactory
+import com.example.pagerlistapp.adapters.IAdapterFactory
 import com.example.pagerlistapp.adapters.LoadAdapter
 import com.example.pagerlistapp.adapters.ImageAdapter
 import com.example.pagerlistapp.amodels.Value
 import com.example.pagerlistapp.application.App
+import com.example.pagerlistapp.decorations.RecyclerViewMargin
 import com.example.pagerlistapp.repository.State
 import com.example.pagerlistapp.viewmodels.MainActivityViewModel
 import com.example.pagerlistapp.viewmodels.ViewModelsFactory
+import dagger.multibindings.StringKey
 import javax.inject.Inject
 
-class PosFragment : Fragment(){
+class PosFragment : BaseFragment() {
 
-    lateinit var recyclerView: RecyclerView
+
     companion object {
         val COLUMN_COUNT = 2
     }
-
-    @Inject
-    lateinit var viewModelsFactory: ViewModelsFactory
 
     private val viewModel: MainActivityViewModel by activityViewModels {
         viewModelsFactory
     }
 
-    private lateinit var refreshSwipeLayout: SwipeRefreshLayout
-
-
-    @Inject
+    lateinit var refreshSwipeLayout: SwipeRefreshLayout
+    lateinit var recyclerView: RecyclerView
     lateinit var imageAdapter: ImageAdapter
-
-    @Inject
     lateinit var loadAdapter: LoadAdapter
+    lateinit var textInput: EditText
+    lateinit var imageView: ImageView
+    lateinit var status: LiveData<State>
 
     /**
      * Создаем новую конфигурацию для @ConcatAdapter и задаем параметру isolateViewTypes значение false,
@@ -71,11 +71,7 @@ class PosFragment : Fragment(){
      * зависеть от адаптера к которому отнситься элемент на запрашиваемой глобальной позиции,
      * В каждом адаптере перегружена функция getItemViewType(position) которая и вернет нужный тип элемента
      */
-    var concatAdapter:ConcatAdapter? = null
-
-    lateinit var textInput: EditText
-    lateinit var imageView: ImageView
-    lateinit var status: LiveData<State>
+    var concatAdapter: ConcatAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -92,22 +88,13 @@ class PosFragment : Fragment(){
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         recyclerView = view.findViewById(R.id.recycler_view)
-
-        App.instance?.applicationComponent?.viewModelComponent()
-            ?.with(this)
-            ?.with(savedInstanceState)
-            ?.build()
-            ?.inject(this)
+        imageAdapter = adaptersFactory.create(ImageAdapter::class)
+        loadAdapter = adaptersFactory.create(LoadAdapter::class)
         concatAdapter = ConcatAdapter(config, imageAdapter, loadAdapter)
-
         recyclerView = view.findViewById(R.id.recycler_view)
-
         refreshSwipeLayout = view.findViewById(R.id.swipe_refresh)
-
         textInput = activity?.findViewById(R.id.text_input)!!
-
         imageView = activity?.findViewById(R.id.search_button)!!
 
         textInput.visibility = View.VISIBLE
@@ -122,6 +109,8 @@ class PosFragment : Fragment(){
          * передадим новый объект GridLayoutManager.SpanSizeLookup в метод setSpanSizeLookup и реализуюем
          * метод getSpanSize
          * */
+
+        recyclerView.addItemDecoration(RecyclerViewMargin(10, RickAndMortyFragment.COLUMN_COUNT))
 
         gridLayoutManager.spanSizeLookup = object : SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -140,6 +129,14 @@ class PosFragment : Fragment(){
         // specify an adapter (see also next example)
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = concatAdapter
+
+        imageAdapter?.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int,itemCount: Int) {
+                if(positionStart == 0) {
+                    (recyclerView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(positionStart,0)
+                }
+            }
+        })
 
         viewModel.imageData.observe(requireActivity(), observer)
 
@@ -160,6 +157,8 @@ class PosFragment : Fragment(){
             }
 
         }
+
+
 
         imageView.setOnClickListener {
             recyclerView.scrollToPosition(0)

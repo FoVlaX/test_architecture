@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import com.example.pagerlistapp.amodels.RDataItem
 import com.example.pagerlistapp.amodels.Value
-import com.example.pagerlistapp.repository.IRepository
-import com.example.pagerlistapp.repository.IRepository_Impl
-import com.example.pagerlistapp.repository.State
+import com.example.pagerlistapp.repository.Repository
+import com.example.pagerlistapp.repository.RepositoryPagedLists
 
-class MainActivityViewModel(val state: SavedStateHandle, private val repository: IRepository) : ViewModel() {
 
-    var imageData: LiveData<PagedList<Value>> = IRepository_Impl(repository).imagesLivePagedList(0)
+class MainActivityViewModel(val state: SavedStateHandle, private val repository: Repository) : ViewModel() {
 
-    var rockAndMortyData: LiveData<PagedList<RDataItem>> = IRepository_Impl(repository).charactersLivePagedList(0)
+    var imageData: LiveData<PagedList<Value>> = RepositoryPagedLists(repository).imagesLivePagedList(0)
+
+    var rockAndMortyData: LiveData<PagedList<RDataItem>> = RepositoryPagedLists(repository).charactersLivePagedList(0)
 
     val status = repository.getStatus()
 
@@ -25,7 +25,11 @@ class MainActivityViewModel(val state: SavedStateHandle, private val repository:
         //пустые данные получим соответсвующий экзепшн от datasource
         //java.lang.IllegalArgumentException: Initial result cannot be empty if items are present in data set.
         repository.setQuery(query)
-        imageData = IRepository_Impl(repository).imagesLivePagedList(0)
+        imageData = RepositoryPagedLists(repository).imagesLivePagedList(0)
+    }
+
+    fun setPositionRockAndMorty(position: Int){
+        state.set("position", position)
     }
 
     fun refreshImages(){

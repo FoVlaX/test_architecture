@@ -3,11 +3,13 @@ package com.example.pagerlistapp.adapters
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -25,22 +27,29 @@ class ImageAdapter : PagedListAdapter<Value, RecyclerView.ViewHolder>(DIFF_CALLB
         return ImageHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         // только в этом методе необходимо заполнять холдеры нигде больше!!!
         if (holder is ImageHolder) {
             val value = getItem(position)
 
             val placeHolderColor: String = "#2233FF"
+            if (value!=null) {
+                val img_url = value?.url?.substringBefore("?")
 
-            val img_url = value?.url?.substringBefore("?")
+                Picasso.get()
+                    .load(img_url)
+                    .placeholder(ColorDrawable(Color.parseColor(placeHolderColor)))
+                    .error(R.drawable.motifation)
+                    .into(holder.imageView)
 
-            Picasso.get()
-                .load(img_url)
-                .placeholder(ColorDrawable(Color.parseColor(placeHolderColor)))
-                .error(R.drawable.motifation)
-                .into(holder.imageView)
+                holder.textView.text = value?.title ?: ""
+            }else{
 
-            holder.textView.text = value?.title?:""
+                //holder.imageView.background = holder.imageView.context.getDrawable(R.drawable.ic_launcher_foreground)
+                //holder.textView.text = "loading..."
+
+            }
         }
     }
 

@@ -5,14 +5,14 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
-import com.example.pagerlistapp.repository.Repository
+import com.example.pagerlistapp.repository.DateRepository
 import java.lang.Exception
 import javax.inject.Inject
 
 class ViewModelsFactory @Inject constructor
     (owner: SavedStateRegistryOwner,
      defaultArgs: Bundle? = null,
-     private val repository: Repository
+     private val dateRepository: DateRepository
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
 
     override fun <T : ViewModel?> create(
@@ -24,7 +24,7 @@ class ViewModelsFactory @Inject constructor
         var lastException: Exception? = null
         for (constructor in modelClass.constructors){
             try{
-                result = constructor.newInstance(handle, repository) as T?
+                result = constructor.newInstance(handle, dateRepository) as T?
                 break
             }catch(ex: Exception){
                 lastException = ex

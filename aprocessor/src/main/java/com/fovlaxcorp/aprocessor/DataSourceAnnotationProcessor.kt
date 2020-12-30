@@ -72,19 +72,19 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
         val className = element.simpleName.toString()
 
         val pack = processingEnv.elementUtils.getPackageOf(element).toString()
-        val fileName = "${className}_Impl"
+        val fileName = "${className}PagedLists"
         val fileBuilder = FileSpec.builder(pack, fileName)
         val classBuilder = TypeSpec.classBuilder(fileName)
 
 
-
+        val repository = "repository"
 
         val ctor = FunSpec.constructorBuilder()
-        ctor.addParameter("repository", element.asType().asTypeName())
+        ctor.addParameter(repository, element.asType().asTypeName())
         classBuilder.primaryConstructor(ctor.build())
         classBuilder.addProperty(
-            PropertySpec.builder("repository", element.asType().asTypeName())
-                .initializer("repository")
+            PropertySpec.builder(repository, element.asType().asTypeName())
+                .initializer(repository)
                 .build()
         )
 
@@ -146,20 +146,43 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
 
                     val typeStr = enclosed.asType().toString()
                     println(enclosed.asType())
-                    val type = typeStr.substringAfter("<").substringBefore(">")
+
+                    val hasPair = typeStr.contains("Pair")
+
+                    val type = if (hasPair) {
+                        typeStr.substringAfter("<").substringAfter("<").substringBefore(">")
+                    }
+                    else{
+                        typeStr.substringAfter("<").substringBefore(">")
+                    }
+
                     val name = genDataSource.sourceName
 
                     val typetest = (enclosed as ExecutableElement).returnType as DeclaredType
-                    val typeIternal = typetest.typeArguments[0]
+                    var typeIternal = typetest.typeArguments[0]
+
+
+                    if (genDataSource.type == GenDataSource.Type.Positional && hasPair){
+                        typeIternal = (typeIternal as DeclaredType).typeArguments[0]
+                    }
+
+
 
                     var clazz:ClassName? = ClassName("androidx.paging", "PagedList").nestedClass("BoundaryCallback")
                     val invCallbackType = ClassName("androidx.paging","DataSource").nestedClass("InvalidatedCallback").copy(nullable = true)
                     val callbackTypeName = clazz?.parameterizedBy(typeIternal.asTypeName())
                     val ops = ParameterSpec.builder("callback",callbackTypeName!!.copy(nullable = true)).defaultValue("null")
-                    val opsInvalidate = ParameterSpec.builder("invalidateCallback",invCallbackType!!.copy(nullable = true)).defaultValue("null")
+                    val opsInvalidate = ParameterSpec.builder("invalidateCallback",invCallbackType.copy(nullable = true)).defaultValue("null")
 
                     when (genDataSource.type) {
                         GenDataSource.Type.Positional -> {
+
+                            val dataSourceCode = if (hasPair) {
+                                "loadDataPos = { offset, count -> repository.${enclosed.simpleName}(offset,count) }),"
+                            }else{
+                                "loadDataPos = { offset, count -> Pair(repository.${enclosed.simpleName}(offset,count), 0) }),"
+                            }
+
                             classBuilder.addFunction(
                                 FunSpec.builder("${name}LivePagedList")
                                     .addParameter("initialKey", Int::class)
@@ -167,8 +190,7 @@ class DataSourceAnnotationProcessor: AbstractProcessor() {
                                         .addParameter(opsInvalidate.build())
                                     .addCode("return ${PATH}SimpleDataSourceGenerator().getLiveDataMapped<Int,${type}>(")
                                     .addCode(" com.fovlax.datasourcelibrary.datasource.Functions(")
-                                    .addCode("loadDataPos = { offset, count ->")
-                                    .addCode("repository.${enclosed.simpleName}(offset,count) }),")
+                                    .addCode(dataSourceCode)
                                     .addCode("${pConfig},initialKey, callback, invalidateCallback)")
                                     .build()
                             )

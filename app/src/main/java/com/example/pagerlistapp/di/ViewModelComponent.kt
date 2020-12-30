@@ -3,6 +3,7 @@ package com.example.pagerlistapp.di
 import android.os.Bundle
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.pagerlistapp.MainActivity
+import com.example.pagerlistapp.fragments.BaseFragment
 import com.example.pagerlistapp.fragments.PosFragment
 import com.example.pagerlistapp.fragments.RickAndMortyFragment
 import dagger.BindsInstance
@@ -21,6 +22,5 @@ interface ViewModelComponent {
     }
 
     fun inject(mainActivity: MainActivity)
-    fun inject(posFragment: PosFragment)
-    fun inject(rickAndMortyFragment: RickAndMortyFragment)
+    fun inject(posFragment: BaseFragment)
 }
