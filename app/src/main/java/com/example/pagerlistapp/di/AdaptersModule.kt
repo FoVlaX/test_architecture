@@ -12,13 +12,13 @@ import kotlin.reflect.KClass
 class AdaptersModule {
 
     @Provides
-    fun adaptersFactory(adapters: Set<@JvmSuppressWildcards KClass<*> > ) : IAdapterFactory {
+    fun adaptersFactory(adapters: Set<@JvmSuppressWildcards KClass<out RecyclerView.Adapter<RecyclerView.ViewHolder>> > ) : IAdapterFactory {
         return AdaptersFactory(adapters = adapters)
     }
 
     @ElementsIntoSet
     @Provides
-    fun appAdapters() : Set<KClass<*>> = HashSet(arrayListOf(
+    fun appAdapters() : Set<KClass<out RecyclerView.Adapter<RecyclerView.ViewHolder>>> = HashSet(arrayListOf(
             LoadAdapter::class,  ImageAdapter::class, RickAndMortyAdapter::class
     ))
 

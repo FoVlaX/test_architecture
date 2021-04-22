@@ -1,6 +1,6 @@
 package com.example.pagerlistapp
 
-import com.example.pagerlistapp.amodels.RDataItem
+import com.example.pagerlistapp.amodels.UIRockAndMortyModel
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import io.reactivex.rxjava3.core.Observable
 import okhttp3.OkHttpClient
@@ -44,6 +44,6 @@ interface RickAndMortyApiService {
     }
 
     @GET("character/{query}")
-    fun getCharacters(@Path("query") query: String) : Observable<List<RDataItem?>?>?
+    fun getCharacters(@Path("query") query: String) : Observable<List<UIRockAndMortyModel.ImageDataItem?>?>?
 
 }

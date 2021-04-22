@@ -20,10 +20,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.pagerlistapp.R
 import com.example.pagerlistapp.adapters.*
-import com.example.pagerlistapp.amodels.RDataItem
+import com.example.pagerlistapp.amodels.UIRockAndMortyModel
 import com.example.pagerlistapp.application.App
 import com.example.pagerlistapp.decorations.RecyclerViewMargin
-import com.example.pagerlistapp.di.NetworkModule_ApiRockAndMortyFactory
 import com.example.pagerlistapp.repository.State
 import com.example.pagerlistapp.viewmodels.MainActivityViewModel
 import com.example.pagerlistapp.viewmodels.ViewModelsFactory
@@ -83,7 +82,7 @@ class RickAndMortyFragment : BaseFragment() {
     }
 
     val observer =
-        Observer<PagedList<RDataItem>> { images ->
+        Observer<PagedList<UIRockAndMortyModel>> { images ->
             rickAndMortyAdapter.submitList(images)
             refreshSwipeLayout.isRefreshing = false
         }

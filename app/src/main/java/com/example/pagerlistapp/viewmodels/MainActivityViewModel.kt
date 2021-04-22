@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
-import com.example.pagerlistapp.amodels.RDataItem
+import com.example.pagerlistapp.amodels.UIRockAndMortyModel
 import com.example.pagerlistapp.amodels.Value
 import com.example.pagerlistapp.repository.Repository
 import com.example.pagerlistapp.repository.RepositoryPagedLists
@@ -14,7 +14,8 @@ class MainActivityViewModel(val state: SavedStateHandle, private val repository:
 
     var imageData: LiveData<PagedList<Value>> = RepositoryPagedLists(repository).imagesLivePagedList(0)
 
-    var rockAndMortyData: LiveData<PagedList<RDataItem>> = RepositoryPagedLists(repository).charactersLivePagedList(0)
+    var rockAndMortyData: LiveData<PagedList<UIRockAndMortyModel>> =
+        RepositoryPagedLists(repository).charactersLivePagedList(0)
 
     val status = repository.getStatus()
 

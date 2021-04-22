@@ -1,7 +1,7 @@
 package com.example.pagerlistapp.repository
 
 import androidx.lifecycle.LiveData
-import com.example.pagerlistapp.amodels.RDataItem
+import com.example.pagerlistapp.amodels.UIRockAndMortyModel
 import com.example.pagerlistapp.amodels.Value
 import com.fovlaxcorp.autodatasource.GenDataSource.Type
 import com.fovlaxcorp.autodatasource.GenDataSource
@@ -25,10 +25,10 @@ interface Repository {
     @PageConfig(initialLoadSizeHint = 10,
                 pageSize = 10)
     @GenDataSource(sourceName = CHARACTERS, type = Type.ItemKeyedAfter)
-    fun getCharacters(id: Int, count: Int): List<RDataItem?>?
+    fun getCharacters(id: Int, count: Int): List<UIRockAndMortyModel?>?
 
     @KeyItem(name = CHARACTERS)
-    fun getKeyCharacter(rDataItem: RDataItem?): Int
+    fun getKeyCharacter(rDataItem: UIRockAndMortyModel?): Int
 
     fun setQuery(query: String?)
 
